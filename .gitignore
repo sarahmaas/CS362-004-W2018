@@ -4,3 +4,7 @@ submit.sh
 # executables
 *.gcda
 *.gcno
+
+
+# comp files
+original.out.txt

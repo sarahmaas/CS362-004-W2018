@@ -1148,22 +1148,8 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
 	case cutpurse: 
 		return playCutpurse(currentPlayer, state, handPos);
 
-	case embargo:
-		//+2 Coins
-		state->coins = state->coins + 2;
-
-		//see if selected pile is in play
-		if (state->supplyCount[choice1] == -1)
-		{
-			return -1;
-		}
-
-		//add embargo token to selected supply pile
-		state->embargoTokens[choice1]++;
-
-		//trash card
-		discardCard(handPos, currentPlayer, state, 1);
-		return 0;
+	case embargo: 
+		return playEmbargo(currentPlayer, state, handPos, choice1);
 
 	case outpost:
 		//set outpost flag
@@ -1408,5 +1394,24 @@ int playAdventurer(int currentPlayer, struct gameState* state, int drawntreasure
 	
 	return 0;
 }
+
+int playEmbargo(int currentPlayer, struct gameState* state, int handPos, int choice1) {
+	//+2 Coins
+	state->coins = state->coins + 2;
+
+	//see if selected pile is in play
+	if (state->supplyCount[choice1] == -1) {
+		return -1;
+	}
+
+	//add embargo token to selected supply pile
+	state->embargoTokens[choice1]++;
+
+	//trash card
+	discardCard(handPos, currentPlayer, state, 1);
+	return 0;
+
+}
+
 //end of dominion.c
 
