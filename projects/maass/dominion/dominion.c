@@ -686,8 +686,8 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
 	int currentPlayer = whoseTurn(state);
 
 	int temphand[MAX_HAND];// moved above the if statement
-	int drawntreasure = 0;
-	int cardDrawn = -1;
+	//int drawntreasure = 0;
+	//int cardDrawn = -1;
 	//int z = 0;// this is the counter for the temp hand
 
 
@@ -697,7 +697,7 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
 	switch (card)
 	{
 	case adventurer: 
-		return playAdventurer(currentPlayer, state, drawntreasure, cardDrawn);
+		return playAdventurer(currentPlayer, state);
 
 	case council_room:
 		//+4 Cards
@@ -1291,9 +1291,10 @@ int playCutpurse(int currentPlayer, struct gameState* state, int handPos) {
 	return 0;
 }
 
-int playAdventurer(int currentPlayer, struct gameState* state, int drawntreasure,
-					int cardDrawn) {
+int playAdventurer(int currentPlayer, struct gameState* state) {
 	int temphand[MAX_HAND];
+	int drawntreasure = 0;
+	int cardDrawn = -1;
 	int z = 0;	// this is the counter for the temp hand
 
 	while (drawntreasure < 2) {
