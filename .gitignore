@@ -4,7 +4,7 @@ submit.sh
 # executables
 *.gcda
 *.gcno
-
+playdom
 
 # comp files
 original.out.txt

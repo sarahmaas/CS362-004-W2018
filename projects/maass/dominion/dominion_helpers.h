@@ -16,5 +16,5 @@ int playCutpurse(int currentPlayer, struct gameState* state, int handPos);
 int playAdventurer(int currentPlayer, struct gameState* state, int drawntreasure,
 					int cardDrawn, int* temphand, int z);
 int playEmbargo(int currentPlayer, struct gameState* state, int handPos, int choice1);
-
+int playTribute(int currentPlayer, struct gameState* state);
 #endif
