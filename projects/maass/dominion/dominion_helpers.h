@@ -13,5 +13,6 @@ int cardEffect(int card, int choice1, int choice2, int choice3,
                struct gameState* state, int handPos, int* bonus);
 int playSmithy(int currentPlayer, struct gameState* state, int handPos);
 int playCutpurse(int currentPlayer, struct gameState* state, int handPos);
-
+int playAdventurer(int currentPlayer, struct gameState* state, int drawntreasure,
+					int cardDrawn, int* temphand, int z);
 #endif
