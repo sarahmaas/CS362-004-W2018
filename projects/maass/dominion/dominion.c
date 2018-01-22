@@ -1120,7 +1120,8 @@ int updateCoins(int player, struct gameState* state, int bonus)
 int playSmithy(int currentPlayer, struct gameState* state, int handPos) {
 	//+3 Cards
 	int i;
-	for (i = 0; i < 3; i++) {
+	// introduce bug, 4 instead of 3 cards
+	for (i = 0; i < 4; i++) {
 		drawCard(currentPlayer, state);
 	}
 	
@@ -1136,7 +1137,8 @@ int playCutpurse(int currentPlayer, struct gameState* state, int handPos) {
 		if (i != currentPlayer) {
 			for (j = 0; j < state->handCount[i]; j++) {
 				if (state->hand[i][j] == copper) {
-					discardCard(j, i, state, 0);
+					// introduce bug, does not make other players discard coppers O.o
+					//discardCard(j, i, state, 0);
 					break;
 				}
 				if (j == state->handCount[i]) {
@@ -1177,6 +1179,8 @@ int playAdventurer(int currentPlayer, struct gameState* state) {
 			temphand[z] = cardDrawn;
 			// this should just remove the top card (the most recently drawn one).
 			state->handCount[currentPlayer]--; 
+			// introduce bug, removes an extra card
+			state->handCount[currentPlayer]--;
 			z++;
 		}
 	}
@@ -1238,7 +1242,8 @@ int playTribute(int currentPlayer, struct gameState* state) {
 				state->discardCount[nextPlayer]--;
 			}
 			//Shuffle the deck
-			shuffle(nextPlayer, state);
+			// introduce bug, doesn't shuffle the deck
+			//shuffle(nextPlayer, state);
 		}
 		tributeRevealedCards[0] = state->deck[nextPlayer][state->deckCount[nextPlayer] - 1];
 		state->deck[nextPlayer][state->deckCount[nextPlayer]--] = -1;
