@@ -1,2 +1,11 @@
 # script for assignment submission
 submit.sh
+
+# executables
+*/dominion.gcda
+*/dominion.gcno
+*/playdom
+*/playdom.gcda
+*/playdom.gcno
+*/rngs.gcda
+*/rngs.gcno
