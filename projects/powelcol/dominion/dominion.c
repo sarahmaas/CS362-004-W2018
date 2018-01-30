@@ -655,61 +655,19 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
 
   int tributeRevealedCards[2] = {-1, -1};
   int temphand[MAX_HAND];// moved above the if statement
-  int drawntreasure=0;
-  int cardDrawn;
-  int z = 0;// this is the counter for the temp hand
+
   if (nextPlayer > (state->numPlayers - 1)){
     nextPlayer = 0;
   }
-  
 	
   //uses switch to select card and perform actions
   switch( card ) 
     {
     case adventurer:
-      while(drawntreasure<2){
-	if (state->deckCount[currentPlayer] <1){//if the deck is empty we need to shuffle discard and add to deck
-	  shuffle(currentPlayer, state);
-	}
-	drawCard(currentPlayer, state);
-	cardDrawn = state->hand[currentPlayer][state->handCount[currentPlayer]-1];//top card of hand is most recently drawn card.
-	if (cardDrawn == copper || cardDrawn == silver || cardDrawn == gold)
-	  drawntreasure++;
-	else{
-	  temphand[z]=cardDrawn;
-	  state->handCount[currentPlayer]--; //this should just remove the top card (the most recently drawn one).
-	  z++;
-	}
-      }
-      while(z-1>=0){
-	state->discard[currentPlayer][state->discardCount[currentPlayer]++]=temphand[z-1]; // discard all cards in play that have been drawn
-	z=z-1;
-      }
-      return 0;
+        return adventurerEffect( state );
 			
     case council_room:
-      //+4 Cards
-      for (i = 0; i < 4; i++)
-	{
-	  drawCard(currentPlayer, state);
-	}
-			
-      //+1 Buy
-      state->numBuys++;
-			
-      //Each other player draws a card
-      for (i = 0; i < state->numPlayers; i++)
-	{
-	  if ( i != currentPlayer )
-	    {
-	      drawCard(i, state);
-	    }
-	}
-			
-      //put played card in played card pile
-      discardCard(handPos, currentPlayer, state, 0);
-			
-      return 0;
+        return councilRoomEffect( handPos, state );
 			
     case feast:
       //gain card with cost up to 5
@@ -768,40 +726,8 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
       return -1;
 			
     case mine:
-      j = state->hand[currentPlayer][choice1];  //store card we will trash
+        return mineEffect( handPos, choice1, choice2, state );
 
-      if (state->hand[currentPlayer][choice1] < copper || state->hand[currentPlayer][choice1] > gold)
-	{
-	  return -1;
-	}
-		
-      if (choice2 > treasure_map || choice2 < curse)
-	{
-	  return -1;
-	}
-
-      if ( (getCost(state->hand[currentPlayer][choice1]) + 3) > getCost(choice2) )
-	{
-	  return -1;
-	}
-
-      gainCard(choice2, state, 2, currentPlayer);
-
-      //discard card from hand
-      discardCard(handPos, currentPlayer, state, 0);
-
-      //discard trashed card
-      for (i = 0; i < state->handCount[currentPlayer]; i++)
-	{
-	  if (state->hand[currentPlayer][i] == j)
-	    {
-	      discardCard(i, currentPlayer, state, 0);			
-	      break;
-	    }
-	}
-			
-      return 0;
-			
     case remodel:
       j = state->hand[currentPlayer][choice1];  //store card we will trash
 
@@ -825,31 +751,14 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
 	    }
 	}
 
-
       return 0;
 		
     case smithy:
-      //+3 Cards
-      for (i = 0; i < 3; i++)
-	{
-	  drawCard(currentPlayer, state);
-	}
-			
-      //discard card from hand
-      discardCard(handPos, currentPlayer, state, 0);
-      return 0;
-		
+        return smithyEffect( handPos, state );
+	
     case village:
-      //+1 Card
-      drawCard(currentPlayer, state);
-			
-      //+2 Actions
-      state->numActions = state->numActions + 2;
-			
-      //discard played card from hand
-      discardCard(handPos, currentPlayer, state, 0);
-      return 0;
-		
+        return villageEffect( handPos, state );
+
     case baron:
       state->numBuys++;//Increase buys by 1!
       if (choice1 > 0){//Boolean true or going to discard an estate
@@ -1182,7 +1091,8 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
     case sea_hag:
       for (i = 0; i < state->numPlayers; i++){
 	if (i != currentPlayer){
-	  state->discard[i][state->discardCount[i]] = state->deck[i][state->deckCount[i]--];			    state->deckCount[i]--;
+	  state->discard[i][state->discardCount[i]] = state->deck[i][state->deckCount[i]--];			    
+      state->deckCount[i]--;
 	  state->discardCount[i]++;
 	  state->deck[i][state->deckCount[i]--] = curse;//Top card now a curse
 	}
@@ -1328,6 +1238,241 @@ int updateCoins(int player, struct gameState *state, int bonus)
   return 0;
 }
 
+//
+// CARD EFFECT HELPER FUNCTIONS:
+//
+
+
+// adventurerEffect(): implementation of Adventurer card: 
+// Card Effect: Reveal 2 cards from deck until 2 Treasures revealed, put those
+// into hand, and discard other cards.
+// Receives: state, a pointer to a gameState struct
+// Returns: 0 on success (card effect successfully applied).
+// Preconditions: gameState has been initialized with initializeGame() 
+// Postconditions: 
+//      -   the first two treasure cards in the current player's deck 
+//          have been added to their hand ( state->hand[currentPlayer][] ); if
+//          two treasure cards were not found in the deck, the discard pile has
+//          been reshuffled and returned to the deck.
+//      -   any other cards drawn from the deck to reach those treasure
+//          have been placed in the current player's discard pile 
+//          (state->discard[currentPlayer][]).
+// NOTE: there is an existing (pre-assignment) bug here: we assume that the
+// player has two or more Treasure cards in their deck -> if only one Treasure
+// in deck, infinite loop.
+// NOTE: another pre-assignment bug: card not discarded from player's hand after
+// playing it.
+
+int adventurerEffect(struct gameState* state) {
+
+    int drawntreasure = 0;   // counter  for treasure cards drawn
+    int z = 0;    // counter for temphand
+    int temphand[MAX_HAND];  // stores drawn non-treasure cards
+    int cardDrawn;          // will store the current card drawn
+    int currentPlayer = whoseTurn(state);
+
+    while(drawntreasure < 2) {
+
+        // draw a card from the deck
+        drawCard(currentPlayer, state);
+        
+        //top card of hand is most recently drawn card.
+        cardDrawn = state->hand[currentPlayer][state->handCount[currentPlayer] - 1];
+        
+        if (cardDrawn == copper || cardDrawn == silver || cardDrawn == gold)
+            drawntreasure++;
+        else{
+            temphand[z]=cardDrawn;
+            //this should just remove the top card (the most recently drawn one).
+            state->handCount[currentPlayer]--; 
+            z++;
+        }
+    }
+
+    // discard all cards in play that have been drawn
+    while(z > 0){
+        // added bug here: should be temphand[z - 1]
+        state->discard[currentPlayer][state->discardCount[currentPlayer]++]=temphand[z]; 
+        z = z - 1;
+    }
+
+    return 0;   // returns 0 on success
+}
+
+// Name: councilRoomEffect(): Implementation of the effect of the Council Room card
+// Card Effect: Draw 4 cards; all other players may draw 1 card. 
+// Receives: state, a pointer to an initialized gameState struct.
+// Returns: 0 on success (card effect successfully applied).
+// Preconditions: gameState must have been initialized with initializeGame.
+// Postconditions: 
+//      - the player's hand (state->hand[currentPlayer][]) contains four more cards,
+//        drawn from their deck (state->deck[currentPlayer][]).
+// NOTE: existing bug: draw step assumes that there are four cards in the
+//       player's deck / discard pile.
+
+int councilRoomEffect( int handPos, struct gameState *state ) {
+
+    int i;  // card counter
+    int currentPlayer = whoseTurn(state);
+
+    //draw +4 Cards
+    for (i = 0; i < 4; i++)
+	{
+	  drawCard(currentPlayer, state);
+	}
+			
+    state->numBuys++;   //+1 Buy
+			
+    //Each other player draws a card
+    for (i = 0; i < state->numPlayers; i++)
+	{
+	    if ( i != currentPlayer )
+	    {
+	        drawCard(i, state);
+	    }
+	}
+			
+    //put played card in played card pile
+    // bug: should be discardCard handPos
+    discardCard(i, currentPlayer, state, 0);
+    return 0;
+
+}
+
+// name: smithyEffect(): Implementation of the effect of the Smithy card.
+// Card Effect: Player draws three cards.
+// Receives: handPos, an int representing the position of the card in the 
+// player's hand; state, a pointer to an initialized gameState struct.
+// Returns: 0 on success (card effect successfully applied).
+// Preconditions: gameState must have been initialized with initializeGame.
+// Postconditions: 
+//      - the player's hand (state->hand[currentPlayer][]) contains three more cards,
+//        drawn from their deck (state->deck[currentPlayer][]). 
+
+int smithyEffect(int handPos, struct gameState *state) {
+
+    int i;  // card counter
+    int currentPlayer = whoseTurn(state);   // get current player
+    int drawCount = 0;
+
+    //+3 Cards
+    for (i = 0; i < 3; i++)
+	{
+        // bug count number of cards successfully drawn
+        if( drawCard(currentPlayer, state) >= 0 ) {
+            drawCount++;
+        }
+	}
+
+    // bug: adding copper to hand if the deck+discard aren't big enough
+    while( drawCount < 3 ) {
+        gainCard(copper, state, 2, currentPlayer);
+        drawCount++;
+    }
+			
+    //discard card from hand
+    discardCard(handPos, currentPlayer, state, 0);
+
+    return 0;
+}
+
+// name: mineEffect(): Implementation of the effect of the Mine card
+// Card Effect: Player may trash a Treasure card in their hand, gaining 
+// a card from the Supply with cost <= 3 + cost of trashed card.
+// Receives: handPos, an int representing the position of the card in the 
+// player's hand; trashChoice, an int representing the card the player wishes to
+// trash (the index of the card in the player's hand); gainChoice, an int 
+// representing the card the player wishes to gain (as an enum value defined in
+// dominion.h); state, a pointer to an initialized gameState struct.
+// Returns: 0 on success, -1 on failure.
+// Preconditions: gameState must have been initialized with initializeGame. handPos
+// must be a valid position in the player's hand.
+// Postconditions: 
+//      - If the player has supplied an incorrect number for the card to be trashed, 
+//        the card to be gained, or if the value of the card the player wishes to gain
+//        exceeds 3 + the cost of the trashed card, the function has returned -1.
+//      - Otherwise, player's hand (state->hand[currentPlayer][]) contains an additional 
+//        card selected by the player. The played card has been placed in the player's 
+//        discard pile (state->discard[currentPlayer][]).
+// NOTE: there is an existing bug here - the 'trashed' card is simply returned to 
+// the discard pile ('trash' flag is not set in discardCard call).
+
+int mineEffect( int handPos, int trashChoice, int gainChoice, struct gameState* state ) {
+    
+    int i;  // counter for trashing card
+
+    int currentPlayer = whoseTurn(state);
+    int j = state->hand[currentPlayer][trashChoice];  //store card we will trash
+
+    // if player isn't trashing a Treasure card, return failure
+    if (    state->hand[currentPlayer][trashChoice] < copper ||
+            state->hand[currentPlayer][trashChoice] > gold )
+	{
+	  return -1;
+	}
+	
+    // if index of card to gain isn't in bounds, return failure
+    // bug: should be gainChoice
+    if (trashChoice > treasure_map || trashChoice < curse)
+	{
+	  return -1;
+	}
+
+    // if cost of card to gain is higher than 3 + cost of trashed card, return failure
+    if ( (getCost(state->hand[currentPlayer][trashChoice]) + 3) > getCost(gainChoice) )
+	{
+	  return -1;
+	}
+
+    // add chosen card
+    gainCard(gainChoice, state, 2, currentPlayer);
+
+    //discard played card from hand
+    discardCard(handPos, currentPlayer, state, 0);
+
+    //discard trashed card
+    for (i = 0; i < state->handCount[currentPlayer]; i++)
+    {
+      if (state->hand[currentPlayer][i] == j)
+        {
+          discardCard(i, currentPlayer, state, 0);			
+          break;
+        }
+    }
+        
+    return 0;
+
+}
+
+// Name: villageEffect(): implementation of the effect of the Village card.
+// Card Effect: Player draws one card, and adds two additional actions.
+// Receives: handPos, an int representing the position of the card in the player's 
+// hand; gameState, a pointer to a struct storing the current state of the game.
+// Returns: 0 on success (card effect successfully applied).
+// Preconditions: gameState must have been initialized with initializeGame(); 
+// handPos must be a valid position in the player's hand.
+// Postconditions: 
+//      -   An additional card has been drawn from the player's deck
+//          ( state->deck[currentPlayer][] )
+//      -   Two actions have been added to the player's
+//          turn; the played card has been discarded.
+
+int villageEffect( int handPos, struct gameState* state ) {
+
+    int currentPlayer = whoseTurn(state);   // get current player
+
+    //+1 Card
+    drawCard(currentPlayer, state);
+        
+    //+2 Actions
+    state->numActions = state->numActions + 2;
+        
+    //discard played card from hand
+    discardCard(handPos, currentPlayer, state, 0);
+
+    return 0;
+
+}		
 
 //end of dominion.c
 

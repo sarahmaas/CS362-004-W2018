@@ -1,1 +1,1 @@
-my name is Colin Powell, powelcol
+This is my assignment-2 submission!
