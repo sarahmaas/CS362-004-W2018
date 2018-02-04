@@ -11,7 +11,6 @@ char inputChar() {
 
 char *inputString() {
     // needs to be able to generate the word 'reset' per specs
-    
     static char string[6] = {0};
     int i;
     for(i=0; i < 5; i++) {
