@@ -44,9 +44,18 @@ int main(int argc, char* argv[]) {
         state.supplyCount[card] = ((card < 3) ? 0 : 5);
         //printf("Testing test: %d\n", state.supplyCount[card]);
     }
-    printf("\t3 empty piles:\n");
+    printf("\tFirst 3 empty piles:\n");
     fflush(stdout);    
     asserttrue(isGameOver(&state));	
+
+    for(card = curse; card <= treasure_map; card++) {
+        state.supplyCount[card] = ((card > treasure_map - 3) ? 0 : 5);
+        //printf("Testing test: %d\n", state.supplyCount[card]);
+    }
+    printf("\tLast 3 empty piles:\n");
+    fflush(stdout);    
+    asserttrue(isGameOver(&state));	
+
 	printf("____________________________________________________\n");
 	
     return 0;
