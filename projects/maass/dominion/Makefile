@@ -29,6 +29,32 @@ runtests: testDrawCard
 	gcov dominion.c >> unittestresult.out
 	cat dominion.c.gcov >> unittestresult.out
 
+# adding my tests here
+unittest1: unittest1.c dominion.o rngs.o
+	gcc -o unittest1 -g unittest1.c dominion.o rngs.o $(CFLAGS)
+
+unittest2: unittest2.c dominion.o rngs.o
+	gcc -o unittest2 -g unittest2.c dominion.o rngs.o $(CFLAGS)
+
+unittest3: unittest3.c dominion.o rngs.o
+	gcc -o unittest3 -g unittest3.c dominion.o rngs.o $(CFLAGS)
+
+unittest4: unittest4.c dominion.o rngs.o
+	gcc -o unittest4 -g unittest4.c dominion.o rngs.o $(CFLAGS)
+
+# need to add card tests yet
+
+# need to add to compile test results in one file as stated:
+# Add a rule in Makefile that will generate and execute all of 
+# these tests, and append complete testing results (including % 
+# coverage) into a file called unittestresults.out. The rule 
+# should be named unittestresults.out and should depend on all 
+# your test code as well as the dominion code. The .out files 
+# contain the output of your running tests and coverage 
+# information. Basically .out file should act as a proof that 
+# your tests run correctly and you collected coverage information 
+# correctly.
+
 
 player: player.c interface.o
 	gcc -o player player.c -g  dominion.o rngs.o interface.o $(CFLAGS)
