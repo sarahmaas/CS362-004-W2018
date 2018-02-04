@@ -4,10 +4,9 @@
 #include<time.h>
 
 char inputChar() {
-    // TODO: rewrite this function
     // needs to hit all of the characters (eventually in order) per specs
     // '[', '(', '{', ' ', 'a', 'x', '}', ')', ']'
-    return ' ';
+    return "[({ ax})]"[rand() % 9];
 }
 
 char *inputString() {
