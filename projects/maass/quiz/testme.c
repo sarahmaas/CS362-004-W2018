@@ -5,12 +5,20 @@
 
 char inputChar() {
     // TODO: rewrite this function
+    // needs to hit all of the characters (eventually in order) per specs
+    // '[', '(', '{', ' ', 'a', 'x', '}', ')', ']'
     return ' ';
 }
 
 char *inputString() {
-    // TODO: rewrite this function
-    return "";
+    // needs to be able to generate the word 'reset' per specs
+    
+    static char string[6] = {0};
+    int i;
+    for(i=0; i < 5; i++) {
+        *(string + i) = "rest"[rand() % 4];
+    }
+    return string;
 }
 
 void testme() {
