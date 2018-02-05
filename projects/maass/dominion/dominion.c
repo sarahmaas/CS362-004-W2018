@@ -280,56 +280,54 @@ int supplyCount(int card, struct gameState* state) {
 	return state->supplyCount[card];
 }
 
-int fullDeckCount(int player, int card, struct gameState* state)
-{
+int fullDeckCount(int player, int card, struct gameState* state) {
 	int i;
 	int count = 0;
 
-	for (i = 0; i < state->deckCount[player]; i++)
-	{
-		if (state->deck[player][i] == card) count++;
+	for (i = 0; i < state->deckCount[player]; i++) {
+		if (state->deck[player][i] == card) 
+			count++;
 	}
 
-	for (i = 0; i < state->handCount[player]; i++)
-	{
-		if (state->hand[player][i] == card) count++;
+	for (i = 0; i < state->handCount[player]; i++) {
+		if (state->hand[player][i] == card) 
+			count++;
 	}
 
-	for (i = 0; i < state->discardCount[player]; i++)
-	{
-		if (state->discard[player][i] == card) count++;
+	for (i = 0; i < state->discardCount[player]; i++) {
+		if (state->discard[player][i] == card) 
+			count++;
 	}
 
 	return count;
 }
 
-int whoseTurn(struct gameState* state)
-{
+int whoseTurn(struct gameState* state) {
 	return state->whoseTurn;
 }
 
-int endTurn(struct gameState* state)
-{
+int endTurn(struct gameState* state) {
 	int k;
 	int i;
 	int currentPlayer = whoseTurn(state);
 
 	//Discard hand
-	for (i = 0; i < state->handCount[currentPlayer]; i++)
-	{
-		state->discard[currentPlayer][state->discardCount[currentPlayer]++] = state->hand[currentPlayer][i];//Discard
-		state->hand[currentPlayer][i] = -1;//Set card to -1
+	for (i = 0; i < state->handCount[currentPlayer]; i++) {
+		//Discard
+		state->discard[currentPlayer][state->discardCount[currentPlayer]++] = state->hand[currentPlayer][i];
+		//Set card to -1
+		state->hand[currentPlayer][i] = -1;
 	}
-	state->handCount[currentPlayer] = 0;//Reset hand count
+	//Reset hand count
+	state->handCount[currentPlayer] = 0;
 
 	//Code for determining the player
-	if (currentPlayer < (state->numPlayers - 1))
-	{
-		state->whoseTurn = currentPlayer + 1;//Still safe to increment
-	}
-	else
-	{
-		state->whoseTurn = 0;//Max player has been reached, loop back around to player 1
+	if (currentPlayer < (state->numPlayers - 1)) {
+		//Still safe to increment
+		state->whoseTurn = currentPlayer + 1;
+	} else {
+		//Max player has been reached, loop back around to player 1
+		state->whoseTurn = 0;
 	}
 
 	state->outpostPlayed = 0;
@@ -342,9 +340,9 @@ int endTurn(struct gameState* state)
 
 	//int k; move to top
 	//Next player draws hand
-	for (k = 0; k < 5; k++)
-	{
-		drawCard(state->whoseTurn, state);//Draw a card
+	for (k = 0; k < 5; k++) {
+		//Draw a card
+		drawCard(state->whoseTurn, state);
 	}
 
 	//Update money
@@ -353,41 +351,34 @@ int endTurn(struct gameState* state)
 	return 0;
 }
 
-int isGameOver(struct gameState* state)
-{
+int isGameOver(struct gameState* state) {
 	int i;
 	int j;
 
 	//if stack of Province cards is empty, the game ends
-	if (state->supplyCount[province] == 0)
-	{
+	if (state->supplyCount[province] == 0) {
 		return 1;
 	}
 
 	//if three supply pile are at 0, the game ends
 	j = 0;
-	for (i = 0; i < 25; i++)
-	{
-		if (state->supplyCount[i] == 0)
-		{
+	for (i = 0; i < 25; i++) {
+		if (state->supplyCount[i] == 0) {
 			j++;
 		}
 	}
-	if (j >= 3)
-	{
+	if (j >= 3) {
 		return 1;
 	}
 
 	return 0;
 }
 
-int scoreFor(int player, struct gameState* state)
-{
+int scoreFor(int player, struct gameState* state) {
 	int i;
 	int score = 0;
 	//score from hand
-	for (i = 0; i < state->handCount[player]; i++)
-	{
+	for (i = 0; i < state->handCount[player]; i++) {
 		if (state->hand[player][i] == curse) { score = score - 1; };
 		if (state->hand[player][i] == estate) { score = score + 1; };
 		if (state->hand[player][i] == duchy) { score = score + 3; };
@@ -397,8 +388,7 @@ int scoreFor(int player, struct gameState* state)
 	}
 
 	//score from discard
-	for (i = 0; i < state->discardCount[player]; i++)
-	{
+	for (i = 0; i < state->discardCount[player]; i++) {
 		if (state->discard[player][i] == curse) { score = score - 1; };
 		if (state->discard[player][i] == estate) { score = score + 1; };
 		if (state->discard[player][i] == duchy) { score = score + 3; };
@@ -408,8 +398,7 @@ int scoreFor(int player, struct gameState* state)
 	}
 
 	//score from deck
-	for (i = 0; i < state->discardCount[player]; i++)
-	{
+	for (i = 0; i < state->discardCount[player]; i++) {
 		if (state->deck[player][i] == curse) { score = score - 1; };
 		if (state->deck[player][i] == estate) { score = score + 1; };
 		if (state->deck[player][i] == duchy) { score = score + 3; };
@@ -1026,7 +1015,7 @@ int discardCard(int handPos, int currentPlayer, struct gameState* state, int tra
 	//set played card to -1
 	state->hand[currentPlayer][handPos] = -1;
 
-	//remove card from player's hand
+	//remove card faserom player's hand
 	if (handPos == (state->handCount[currentPlayer] - 1)) //last card in hand array is played
 	{
 		//reduce number of cards in hand
