@@ -10,7 +10,7 @@ void asserttrue(int statement);
 
 
 int main(int argc, char* argv[]) {
-    char functionName[] = "buyCard()";
+    char functionName[] = "getCost()";
 	printf("____________________________________________________\n");
 	printf("Testing %s\n\n", functionName);
 	fflush(stdout);
