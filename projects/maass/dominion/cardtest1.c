@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
     printf("\tcorrect number of cards in hand:\n");
     fflush(stdout);     
     // 2 because + 3 and we played 1.
-    asserttrue(handCountAfter == (handCountBefore + 2));
+    asserttrue((handCountAfter - handCountBefore) == 2);
 
     printf("\tcorrect number of cards in deck:\n");
     fflush(stdout);
