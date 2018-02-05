@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// testing supplyCount() function >:)
+// testing supplyCount() function
 
 void asserttrue(int statement);
 
@@ -34,7 +34,6 @@ int main(int argc, char* argv[]) {
         asserttrue(supplyCount(i, &state) == (i + 2));
     }
     
-
 	printf("____________________________________________________\n");
 	
     return 0;
