@@ -4,35 +4,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// testing gainCard() function
+// testing kingdomCards() function
 
 void asserttrue(int statement);
 
 
 int main(int argc, char* argv[]) {
-    char functionName[] = "gainCard()";
-    struct gameState state;
-    int players = 2;
-    int seed = 100;
-	int k[10] = {adventurer, gardens, embargo, village, minion, mine, cutpurse,
-		sea_hag, tribute, smithy};
+    char functionName[] = "kingdomCards()";
+	int control[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 	printf("____________________________________________________\n");
 	printf("Testing %s\n\n", functionName);
 	fflush(stdout);
-    
-    // init game
-    initializeGame(players, k, seed, &state);
 
     // What is the expected behavior??
-    // dependent on:
-    //  number of buys for the player
-    //  cards left
-    //  player's money
-    // if successful
-    //  it should go into the player's hand
-    //  the card supply should decrease by one - but do we test this here? I think so.
-    //  the player's money should decrease correctly
-    //  the player's buys should decrease correctly
+    //  returns an int array that matches what was given
+    int* test = kingdomCards(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
+    // test all positions
+    int i;
+    for (i = 0; i < 10; i++) {
+        printf("\ttest position %d:\n", i);
+        fflush(stdout);
+        asserttrue(control[i] == *(test + i));  
+    }
     
 
 	printf("____________________________________________________\n");
