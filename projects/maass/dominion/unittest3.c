@@ -72,7 +72,8 @@ int main(int argc, char* argv[]) {
     asserttrue(getCost(sea_hag) == 4);
     printf("\ttreasure_map cost:\n");
     asserttrue(getCost(treasure_map) == 4);
-
+    printf("\tother cost:\n");
+    asserttrue(getCost(treasure_map + 1) == -1);
 	printf("____________________________________________________\n");
 	
     return 0;
