@@ -73,7 +73,7 @@ randomtestcard1.out: randomtestcard1
 	cat dominion.c.gcov >> randomtestcard1.out
 
 randomtestcard2.out: randomtestcard2
-	./randomtestcard1 &> randomtestcard2.out
+	./randomtestcard2 &> randomtestcard2.out
 	gcov -b randomtestcard2.c >> randomtestcard2.out
 	cat randomtestcard2.c.gcov >> randomtestcard2.out
 	gcov -f -b dominion.c >> randomtestcard2.out
