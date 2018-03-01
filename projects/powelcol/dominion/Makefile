@@ -47,7 +47,7 @@ interface.o: interface.h interface.c
 	gcc -c interface.c -g  $(CFLAGS)
   
 player: player.c interface.o
-  gcc -o player player.c -g  dominion.o rngs.o interface.o $(CFLAGS)
+	gcc -o player player.c -g  dominion.o rngs.o interface.o $(CFLAGS)
 
 runtests: testDrawCard 
 	./testDrawCard &> unittestresult.out
