@@ -68,7 +68,7 @@ A specific minimal test case that exposes the bug can be constructed as follows:
 - Observe that Smithy is in the playedCards array, but not in the current player's hand.
 
 This test may be observed with "minimal_smithy_test.c", which can be compiled with "make minsmithy.out" from
-the command line. Test output is in the text file minsmithy.out.
+the command line. test output is in the text file minsmithy.out.
 
 Note that although the rngs library is required to compile dominion.c, it is not used to create this minimal
 test case; thus, a specific seed is not necessary.
@@ -188,7 +188,12 @@ A specific minimal test case that exposes this bug was created as follows:
 - Have Player 0 play Adventurer (call cardEffect(adventurer, 0, 0, 0, &state, hand_pos, &bonus)
 - Observe that the number of cards in Player 0's hand after cardEffect is called is 3.
 - Observe that Adventurer is not in the game state's playedCards array, and that playedCardCount is not 0. 
+  
+This test may be observed with "minimal_adv_test.c", which can be compiled with "make minadventurer" from
+the command line. test output is in the text file minadventurer.out.
 
+Note that although the rngs library is required to compile dominion.c, it is not used to create this minimal
+test case; thus, a specific seed is not necessary.
 
 Expected Results
 ----------------
