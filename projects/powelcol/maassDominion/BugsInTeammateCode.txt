@@ -1,0 +1,212 @@
+==============================
+BUG REPORT 1
+==============================
+
+Title: playSmithy Draws Too Many Cards 
+ID: maass_dominion_1
+
+Class: System Error - in-game effect does not match game rules.
+
+Date: 3/1/18
+Reported By: Colin Powell
+Email: powelcol@oregonstate.edu 
+
+Product: CS362 Dominion Game    Version: Assignment-2 (code submitted for Assignment 2) 
+Platform: macOS Sierra          Version: 10.12.6
+Compiler: Apple LLVM            Version: 9.0.0
+Environment: iTerm2             Version: Build 3.1.5
+
+Is it reproducible: Yes - easily reproducible.
+Severity: Severe (impacts game balance, violates game rules)
+Priority: Moderate (Smithy card is not required to be in every game, and can be avoided)
+
+Description
+===========
+
+If the deck and discard piles have a combined size of four or more cards when the playSmithy function 
+is called, four cards will be drawn from the player's deck into their hand. 
+
+In terms of the dominion.h and dominion.h game code: if cardEffect() is called for the 
+smithy card, and the player with ID number matching the game state's whoseTurn member variable 
+has more than three cards in their deck and/or discard pile, four cards from that player's
+deck[][] will be added to their hand[][] array. deckCount is decremented by four for the 
+current player, and handCount is incremented by four for the current player. This is inconsistent 
+with the Dominion game rules, which state that, when Smithy is played, the current player draws at most three cards. 
+
+
+Steps to Produce/Reproduce
+--------------------------
+
+Create a game state in which the hand of the current player (i.e., the player whose turn it is) contains 
+at least one Smithy card, and that player has a deck and discard pile with a combined size of at least four cards. 
+Play a Smithy from the player's hand, and observe the content of the player's hand and deck after Smithy is played. 
+Also note the content of the playedCards array. 
+
+Minimal Test Case:
+
+A specific minimal test case that exposes the bug can be constructed as follows:
+- Initialize Dominion game: 
+    - Create a gameState struct named state. Set state.numPlayers to 2.
+    - Set state's whoseTurn member to 0, so that it is Player 0's turn.
+    - Set state's playedCardCount to 0. 
+    - Place Smithy in Player 0's hand at index 0; save this value as hand_pos (int hand_pos = 0). Smithy
+      should be the only card in Player 0's hand.
+    - Place five (5) cards in Player 0's deck (tested with 5 Coppers). The specific cards are not important.
+    - Create a placeholder variable named "bonus", initialized to zero.
+- Have Player 0 play Smithy (call cardEffect(smithy, 0, 0, 0, &state, hand_pos, &bonus)
+- Observe the number of cards in Player 0's hand after cardEffect is called.
+- Observe that Smithy is in the playedCards array, but not in the current player's hand.
+
+This test may be observed with "minimal_smithy_test.c", which can be compiled with "make minsmithy.out" from
+the command line. Test output is in the text file minsmithy.out.
+
+Note that although the rngs library is required to compile dominion.c, it is not used to create this minimal
+test case; thus, a specific seed is not necessary.
+
+
+Expected Results
+----------------
+
+Generally (assuming a deck size of at least three, as noted above):
+- The current player's hand array should contain the three top cards from the deck (the cards at
+  the three highest indices in that player's deck[][] array).
+- The current player's hand should contain three more cards (handCount for the current player should be incremented by three).
+- The player's deck should contain three less cards (deckCount[] for the current player should be
+  decremented by three). 
+- Smithy should be in the playedCards array.
+
+In the minimal working test case above:
+- Player 0 should have three cards in their hand - handCount for Player 0 should be 3.
+- Player 0 should have two cards in their deck - deckCount for Player 0 should be 2.
+- One Smithy card should be in the game state's playedCards array
+
+
+Actual Results
+--------------
+
+Generally (assuming a deck size of at least three, as noted above):
+- the current player's hand array contains the top four cards from the deck (the cards at the four highest
+  indices in that player's deck[][] array).
+- the player's deck contains four less cards (deckCount[] for that player has been decremented by four).
+- Smithy is in the playedCards array (this is correct behavior).
+
+In the minimal working test case above:
+- Player 0 has four cards in their hand, with handCount for Player 0 set to 4. 
+- Player 0 has 1 card in their deck, with deckCount for Player 0 set to 1.
+- One Smithy is in the playedCards array (this is correct behavior).
+
+
+Workarounds
+-----------
+
+Remove Smithy from the list of kingdom cards eligible to be chosen for a Dominion game; as the 
+error regularly causes behavior not consistent with the game rules, including Smithy will cause
+a rules imbalance that could alter the result of the game.
+
+
+Attachments
+-----------
+
+Refer to the minimal_smithy_test.c file located in this directory for a working minimal test that exposes this bug.
+This test may be compiled and executed with "make minsmithy", which produces results in a text file named 
+"minsmithytest.out"
+
+
+==============================
+BUG REPORT 2 
+==============================
+
+Title: Adventurer not placed in playedCards array 
+ID: maass_dominion_2
+
+Class: System Error - in-game effect does not match game rules.
+
+Date: 3/1/18
+Reported By: Colin Powell
+Email: powelcol@oregonstate.edu 
+
+Product: CS362Dominion Game     Version: Assignment-2 (code submitted for Assignment 2) 
+Platform: macOS Sierra          Version: 10.12.6
+Compiler: Apple LLVM            Version: 9.0.0
+Environment: iTerm2             Version: Build 3.1.5
+
+Is it reproducible: Yes - easily reproducible.
+Severity: Severe (impacts game balance, violates game rules)
+Priority: Moderate (Adventurer card is not required to be in every game, and can be avoided until bug is fixed)
+
+Description
+===========
+
+If the current player plays the Adventurer card through the cardEffect() function, it is not placed into the playedCards
+array per the game rules, and remains in the player's hand instead.
+
+In terms of the dominion.c code: when the current player (the player with ID number matching the game state's
+whoseTurn member variable) plays adventurer through cardEffect(), the playedCards[] array and playedCardCount 
+member variables of the gameState struct are not updated once cardEffect() returns. Adventurer remains
+in the hand of the player for whom cardEffect() was called.
+
+
+Steps to Produce/Reproduce
+--------------------------
+
+Create a game state in which the hand of the current player (the player whose turn it is) contains one Adventurer card. Place
+at least two Treasure cards (copper, silver, or gold) in that player's deck[][] array, with no other cards in the player's 
+deck (this is to limit the possibility of introducing other bugs). Play Adventurer with cardEffect(), and observe that 
+after the card is played, Adventurer is still in that player's hand, in the same hand position in which it was located 
+before the call to cardEffect().
+
+Minimal Test Case:
+
+A specific minimal test case that exposes this bug was created as follows:
+- Initialize Dominion game: 
+    - Create a gameState struct named state. Set state.numPlayers to 2. 
+    - Set state's whoseTurn member to 0, so that it is Player 0's turn.
+    - Set state's playedCardCount to 0. 
+    - Place Adventurer in Player 0's hand at index 0; save this value as hand_pos (int hand_pos = 0). Adventurer 
+      should be the only card in Player 0's hand.
+    - Place five (5) Copper cards in Player 0's deck to ensure that Adventurer will find two Treasure cards.
+    - Create a placeholder variable named "bonus", initialized to zero.
+- Have Player 0 play Adventurer (call cardEffect(adventurer, 0, 0, 0, &state, hand_pos, &bonus)
+- Observe that the number of cards in Player 0's hand after cardEffect is called is 3.
+- Observe that Adventurer is not in the game state's playedCards array, and that playedCardCount is not 0. 
+
+
+Expected Results
+----------------
+
+In the minimal test case above:
+- the current player's handCount[] is two. 
+- the current player's hand contains two Copper cards.
+- the current player's discardCount[] is identical to the pre-test count.
+- the current player's deckCount[] is three, with all cards in the deck[][] array
+  being Copper cards. 
+- the game state's playedCards[] array contains one card (Adventurer), with playedCardCount = 1.
+
+
+Actual Results
+--------------
+
+In the minimal test case above:
+- the current player's handCount[] is three.
+- the current player's hand contains two Copper cards (correct behavior).
+- the current player's discardCount[] is identical to the pre-test count (correct behavior).
+- the current player's deckCount[] is three, with all cards in the deck[][] array being
+  Copper cards.
+- the game state's playedCards[] array contains no cards, with playedCardCount = 0.
+
+
+Workarounds
+-----------
+
+A temporary (but non-ideal) fix is to simply remove Adventurer from the game for the time being; this will not break
+the implementation of other cards, and will still allow for the game to be played. Given the fact that this bug affects
+all plays of the Adventurer card, it is not possible to keep it in the game while maintaining the rules of the game.
+
+
+Attachments
+-----------
+
+Refer to the minimal_adv_test.c file located in this directory for a working minimal test that exposes this bug.
+This test may be compiled and executed with "make minadventurer", which produces results in a text file named 
+"minadventurertest.out"
+
