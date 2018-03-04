@@ -18,8 +18,17 @@ Compiler: GCC					Version: 4.8.5 20150623
 Environment: iTerm2             Version: Build 3.1.5
 
 Is it reproducible: Yes - easily reproducible.
-Severity: Severe (impacts game balance, violates game rules)
-Priority: Moderate (Smithy card is not required to be in every game, and can be avoided)
+
+Severity: Severe 
+          This bug impacts the balance of the game, and will produce incorrect behavior 
+          that unfairly favors the player playing the Smithy card if that player has fewer
+          than three cards in their deck and discard piles. This game state could occur
+          with some regularity, and could thus confuse or anger users that expect Dominion
+          rules to be followed. 
+Priority: Moderate 
+          The Smithy card is not required to be in every game, and can be avoided - perhaps removed
+          from the list of possible Kingdom cards - while a bugfix is being implemented. This is 
+          not ideal, but could be done if a bugfix could not be created immediately.
 
 Description
 ===========
@@ -126,15 +135,23 @@ Date: 3/1/18
 Reported By: Colin Powell
 Email: powelcol@oregonstate.edu 
 
-Product: CS362Dominion Game     Version: Assignment-2 (code submitted for Assignment 2) 
+Product: CS362 Dominion Game     Version: Assignment-2 (code submitted for Assignment 2) 
 Platform: GNU/Linux           	Kernel Release: 3.10.0-693.11.1.e17.x86_64
 								Distribution: CentOS Linux 7.4.1708
 Compiler: GCC					Version: 4.8.5 20150623
 Environment: iTerm2             Version: Build 3.1.5
 
 Is it reproducible: Yes - easily reproducible.
-Severity: Severe (impacts game balance, violates game rules)
-Priority: Moderate (Adventurer card is not required to be in every game, and can be avoided until bug is fixed)
+
+Severity: Severe 
+          This bug impacts game balance, and violates game rules; it will appear any time Adventurer is played, 
+          and is thus easily reproducible. If a player can keep Adventurer in their hand each turn, they will 
+          be given an unfair advantage that could confuse or anger users who expect the Dominion game rules to 
+          be implemented correctly.
+Priority: Moderate 
+          The Adventurer card is not required to be in every game, and can be avoided until the bug is fixed, possibly
+          by removing it from the game until a bugfix can be developed. This is not ideal, but is certainly an option
+          if the source of the bug can't be found quickly. 
 
 Description
 ===========

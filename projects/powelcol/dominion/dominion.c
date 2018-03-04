@@ -1357,7 +1357,7 @@ int smithyEffect(int handPos, struct gameState *state) {
 
     //+3 Cards
     for (i = 0; i < 3; i++) {
-        drawCard(currentPlayer, state) >= 0;
+        drawCard(currentPlayer, state);
 	}
 			
     //discard card from hand
