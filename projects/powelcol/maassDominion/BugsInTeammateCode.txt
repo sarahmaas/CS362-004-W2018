@@ -12,8 +12,9 @@ Reported By: Colin Powell
 Email: powelcol@oregonstate.edu 
 
 Product: CS362 Dominion Game    Version: Assignment-2 (code submitted for Assignment 2) 
-Platform: macOS Sierra          Version: 10.12.6
-Compiler: Apple LLVM            Version: 9.0.0
+Platform: GNU/Linux           	Kernel Release: 3.10.0-693.11.1.e17.x86_64
+								Distribution: CentOS Linux 7.4.1708
+Compiler: GCC					Version: 4.8.5 20150623
 Environment: iTerm2             Version: Build 3.1.5
 
 Is it reproducible: Yes - easily reproducible.
@@ -126,8 +127,9 @@ Reported By: Colin Powell
 Email: powelcol@oregonstate.edu 
 
 Product: CS362Dominion Game     Version: Assignment-2 (code submitted for Assignment 2) 
-Platform: macOS Sierra          Version: 10.12.6
-Compiler: Apple LLVM            Version: 9.0.0
+Platform: GNU/Linux           	Kernel Release: 3.10.0-693.11.1.e17.x86_64
+								Distribution: CentOS Linux 7.4.1708
+Compiler: GCC					Version: 4.8.5 20150623
 Environment: iTerm2             Version: Build 3.1.5
 
 Is it reproducible: Yes - easily reproducible.

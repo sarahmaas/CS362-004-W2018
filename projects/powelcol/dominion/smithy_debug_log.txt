@@ -1,0 +1,172 @@
++break smithyTest
+Breakpoint 1 at 0x4014b8: file cardtest1.c, line 102.
++break smithyEffect
+Breakpoint 2 at 0x40685b: file dominion.c, line 1355.
++run
+Starting program: /nfs/stak/users/powelcol/CS362-004-W2018/projects/powelcol/dominion/ct1 
+
+Breakpoint 1, smithyTest (plyr=0, drawn=3, state=0x7fffffff7330) at cardtest1.c:102
+102	    int i = 0;  // counter
+Missing separate debuginfos, use: debuginfo-install glibc-2.17-196.el7_4.2.x86_64
++c
+Continuing.
+
+Breakpoint 2, smithyEffect (handPos=0, state=0x7ffffffea520) at dominion.c:1355
+1355	    int currentPlayer = whoseTurn(state);   // get current player
++c
+Continuing.
+
+Breakpoint 1, smithyTest (plyr=0, drawn=2, state=0x7fffffff7330) at cardtest1.c:102
+102	    int i = 0;  // counter
++c
+Continuing.
+
+Breakpoint 2, smithyEffect (handPos=0, state=0x7ffffffea520) at dominion.c:1355
+1355	    int currentPlayer = whoseTurn(state);   // get current player
++p state->whoseTurn
+$1 = 0
++p state->handCount[0]
+$2 = 5
++p state->deckCount[0]
+$3 = 2
++p state->discardCount[0]
+$4 = 0
++step
+whoseTurn (state=0x7ffffffea520) at dominion.c:347
+347	  return state->whoseTurn;
++step
+348	}
++step
+smithyEffect (handPos=0, state=0x7ffffffea520) at dominion.c:1356
+1356	    int drawCount = 0;
++step
+1359	    for (i = 0; i < 3; i++)
++step
+1362	        if( drawCard(currentPlayer, state) >= 0 ) {
++next
+1363	            drawCount++;
++next
+1359	    for (i = 0; i < 3; i++)
++next
+1362	        if( drawCard(currentPlayer, state) >= 0 ) {
++next
+1363	            drawCount++;
++next
+1359	    for (i = 0; i < 3; i++)
++p drawCount
+$5 = 2
++step
+1362	        if( drawCard(currentPlayer, state) >= 0 ) {
++step
+drawCard (player=0, state=0x7ffffffea520) at dominion.c:528
+528	  if (state->deckCount[player] <= 0){//Deck is empty
++next
+533	    for (i = 0; i < state->discardCount[player];i++){
++next
+538	    state->deckCount[player] = state->discardCount[player];
++next
+539	    state->discardCount[player] = 0;//Reset discard
++next
+542	    shuffle(player, state);//Shuffle the deck up and make it so that we can draw
++next
+548	    state->discardCount[player] = 0;
++next
+551	    count = state->handCount[player];//Get current player's hand count
++next
+557	    deckCounter = state->deckCount[player];//Create a holder for the deck count
++next
+559	    if (deckCounter == 0)
++next
+560	      return -1;
++next
+581	}
++next
+smithyEffect (handPos=0, state=0x7ffffffea520) at dominion.c:1359
+1359	    for (i = 0; i < 3; i++)
++p drawCount
+$6 = 2
++next
+1368	    while( drawCount < 3 ) {
++p drawCount
+$7 = 2
++p state->handCount[0]
+$8 = 7
++p state->deckCount[0]
+$9 = 0
++p state->discardCount[0]
+$10 = 0
++p state->hand[0]
+$11 = {13, 4, 4, 4, 1, 1, 1, 0 <repeats 493 times>}
++watch state->handCount[0]
+Hardware watchpoint 3: state->handCount[0]
++watch state->supplyCount[copper]
+Hardware watchpoint 4: state->supplyCount[copper]
++next
+1369	        gainCard(copper, state, 2, currentPlayer);
++next
+Hardware watchpoint 3: state->handCount[0]
+
+Old value = 7
+New value = 8
+0x00000000004062bc in gainCard (supplyPos=4, state=0x7ffffffea520, toFlag=2, player=0) at dominion.c:1197
+1197	      state->handCount[player]++;
++next
+1206	  state->supplyCount[supplyPos]--;
++next
+Hardware watchpoint 4: state->supplyCount[copper]
+
+Old value = 46
+New value = 45
+gainCard (supplyPos=4, state=0x7ffffffea520, toFlag=2, player=0) at dominion.c:1208
+1208	  return 0;
++next
+1209	}
++next
+smithyEffect (handPos=0, state=0x7ffffffea520) at dominion.c:1370
+1370	        drawCount++;
++next
+1368	    while( drawCount < 3 ) {
++p drawCount
+$12 = 3
++p drawCount
+$13 = 3
++p drawCount
+$14 = 3
++n
+1374	    discardCard(handPos, currentPlayer, state, 0);
++n
+Hardware watchpoint 3: state->handCount[0]
+
+Old value = 8
+New value = 7
+0x000000000040615d in discardCard (handPos=0, currentPlayer=0, state=0x7ffffffea520, trashFlag=0) at dominion.c:1168
+1168	      state->handCount[currentPlayer]--;
++n
+1171	  return 0;
++n
+1172	}
++n
+smithyEffect (handPos=0, state=0x7ffffffea520) at dominion.c:1376
+1376	    return 0;
++n
+1377	}
++n
+
+Watchpoint 3 deleted because the program has left the block in
+which its expression is valid.
+
+Watchpoint 4 deleted because the program has left the block in
+which its expression is valid.
+0x0000000000404382 in cardEffect (card=13, choice1=0, choice2=0, choice3=0, state=0x7ffffffea520, handPos=0, bonus=0x7fffffff0be8) at dominion.c:757
+757	        return smithyEffect( handPos, state );
++n
+1134	}
++n
+smithyTest (plyr=0, drawn=2, state=0x7fffffff7330) at cardtest1.c:144
+144	    if(test_fulldeck_counts(exp_decks, exp_hands, exp_discard, &st_test) == FALSE) {
++q
+A debugging session is active.
+
+	Inferior 1 [process 29652] will be killed.
+
+Quit anyway? (y or n) 

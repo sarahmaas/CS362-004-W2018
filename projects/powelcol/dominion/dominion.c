@@ -1356,19 +1356,9 @@ int smithyEffect(int handPos, struct gameState *state) {
     int drawCount = 0;
 
     //+3 Cards
-    for (i = 0; i < 3; i++)
-	{
-        // bug count number of cards successfully drawn
-        if( drawCard(currentPlayer, state) >= 0 ) {
-            drawCount++;
-        }
+    for (i = 0; i < 3; i++) {
+        drawCard(currentPlayer, state) >= 0;
 	}
-
-    // bug: adding copper to hand if the deck+discard aren't big enough
-    while( drawCount < 3 ) {
-        gainCard(copper, state, 2, currentPlayer);
-        drawCount++;
-    }
 			
     //discard card from hand
     discardCard(handPos, currentPlayer, state, 0);
