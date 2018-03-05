@@ -1,0 +1,56 @@
+Bug Report 1
+==============================
+
+Title:  deck count not updated correctly in smithyEffect function  
+
+Class: Serious Bug
+
+Date: 3/4/2018          
+Reported By: Sarah Maas  
+Email: maass@oregonstate.edu     
+
+
+Product: Dominion
+Platform: Flip server (CentOS)
+
+Is it reproducible: Yes 
+
+Description
+===========
+The number of cards in the deck is incorrect after every time the
+function is called. It affected all of the 1000 iterations in the
+random test.
+
+
+Steps to Produce/Reproduce
+--------------------------
+Run randomtestcard1.
+
+
+Expected Results
+----------------
+____________________________________________________________________
+Testing smithy card
+
+        correct number of cards in hand: 1000 of 1000 times.
+        correct number of cards in deck: 1000 of 1000 times.
+____________________________________________________________________
+
+
+Actual Results
+--------------
+____________________________________________________________________
+Testing smithy card
+
+        correct number of cards in hand: 1000 of 1000 times.
+        correct number of cards in deck: 0 of 1000 times.
+____________________________________________________________________
+
+
+Workarounds
+-----------
+None identified, needs to be corrected.
+
+
+
+
