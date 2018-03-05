@@ -52,5 +52,63 @@ Workarounds
 None identified, needs to be corrected.
 
 
+Bug Report 2
+==============================
 
+Title: isGameOver function fails when the last 3 piles are empty   
+
+Class: Serious Bug
+
+Date: 3/4/2018          
+Reported By: Sarah Maas  
+Email: maass@oregonstate.edu     
+
+
+Product: Dominion
+Platform: Flip server (CentOS)
+
+Is it reproducible: Yes 
+
+Description
+===========
+When isGameOver checks for empty piles, it is failing at the end.
+It is suspected that it's missing the last pile since it's failing
+the test which checks the last 3 piles. In the unit test all 3 are 
+set to empty, but it is not reporting 3 empty piles.
+
+Steps to Produce/Reproduce
+--------------------------
+Run unittest1.
+
+
+Expected Results
+----------------
+____________________________________________________
+Testing isGameOver()
+
+	No provinces left:
+		Test successfully completed.
+	First 3 empty piles:
+		Test successfully completed.
+	Last 3 empty piles:
+		Test successfully completed.
+____________________________________________________
+
+Actual Results
+--------------
+____________________________________________________
+Testing isGameOver()
+
+	No provinces left:
+		Test successfully completed.
+	First 3 empty piles:
+		Test successfully completed.
+	Last 3 empty piles:
+		Test failed.
+____________________________________________________
+
+
+Workarounds
+-----------
+None identified, needs to be corrected. 
 

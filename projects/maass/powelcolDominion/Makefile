@@ -67,7 +67,7 @@ randomtestadventurer: randomtestadventurer.c dominion.o rngs.o interface.o
 
 randomtestcard1.out: randomtestcard1
 	./randomtestcard1
-	./randomtestcard1 &> randomtestcard1.out
+	./randomtestcard1 > randomtestcard1.out
 	gcov -b randomtestcard1.c >> randomtestcard1.out
 	cat randomtestcard1.c.gcov >> randomtestcard1.out
 	gcov -f -b dominion.c >> randomtestcard1.out
@@ -75,7 +75,7 @@ randomtestcard1.out: randomtestcard1
 
 randomtestcard2.out: randomtestcard2
 	./randomtestcard2
-	./randomtestcard2 &> randomtestcard2.out
+	./randomtestcard2 > randomtestcard2.out
 	gcov -b randomtestcard2.c >> randomtestcard2.out
 	cat randomtestcard2.c.gcov >> randomtestcard2.out
 	gcov -f -b dominion.c >> randomtestcard2.out
@@ -83,7 +83,7 @@ randomtestcard2.out: randomtestcard2
 
 randomtestadventurer.out: randomtestadventurer
 	./randomtestadventurer
-	./randomtestadventurer &> randomtestadventurer.out
+	./randomtestadventurer > randomtestadventurer.out
 	gcov -b randomtestadventurer.c >> randomtestadventurer.out
 	cat randomtestadventurer.c.gcov >> randomtestadventurer.out
 	gcov -f -b dominion.c >> randomtestadventurer.out
@@ -91,7 +91,7 @@ randomtestadventurer.out: randomtestadventurer
 	
 # rule to compile test results
 unittestresults.out: unittest1 unittest2 unittest3 unittest4 cardtest1 cardtest2 cardtest3 cardtest4
-	./unittest1 &> unittestresults.out
+	./unittest1 > unittestresults.out
 	./unittest2 >> unittestresults.out
 	./unittest3 >> unittestresults.out
 	./unittest4 >> unittestresults.out
