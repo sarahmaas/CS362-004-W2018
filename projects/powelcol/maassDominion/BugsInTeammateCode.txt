@@ -15,7 +15,6 @@ Product: CS362 Dominion Game    Version: Assignment-2 (code submitted for Assign
 Platform: GNU/Linux           	Kernel Release: 3.10.0-693.11.1.e17.x86_64
 								Distribution: CentOS Linux 7.4.1708
 Compiler: GCC					Version: 4.8.5 20150623
-Environment: iTerm2             Version: Build 3.1.5
 
 Is it reproducible: Yes - easily reproducible.
 
@@ -28,7 +27,7 @@ Severity: Severe
 Priority: Moderate 
           The Smithy card is not required to be in every game, and can be avoided - perhaps removed
           from the list of possible Kingdom cards - while a bugfix is being implemented. This is 
-          not ideal, but could be done if a bugfix could not be created immediately.
+          not ideal, but could be done if the source of the bug could not be created immediately.
 
 Description
 ===========
@@ -80,7 +79,8 @@ Expected Results
 Generally (assuming a deck size of at least three, as noted above):
 - The current player's hand array should contain the three top cards from the deck (the cards at
   the three highest indices in that player's deck[][] array).
-- The current player's hand should contain three more cards (handCount for the current player should be incremented by three).
+- The current player's hand should contain two more cards (handCount for the current player should be incremented by two), 
+  accounting for the three cards drawn and the played Smithy card.
 - The player's deck should contain three less cards (deckCount[] for the current player should be
   decremented by three). 
 - Smithy should be in the playedCards array.
@@ -139,7 +139,6 @@ Product: CS362 Dominion Game     Version: Assignment-2 (code submitted for Assig
 Platform: GNU/Linux           	Kernel Release: 3.10.0-693.11.1.e17.x86_64
 								Distribution: CentOS Linux 7.4.1708
 Compiler: GCC					Version: 4.8.5 20150623
-Environment: iTerm2             Version: Build 3.1.5
 
 Is it reproducible: Yes - easily reproducible.
 

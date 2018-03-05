@@ -5,8 +5,7 @@
 #######
 
 ## NOTE: gcov is cumulative, and so my method for creating unittestresults.out is as follows:
-# - perform each unit test, then call gcov, piping the overall result for the 
-#	function ONLY to unittestresults.out
+# - perform each unit test
 # - remove the .gcda file associated with dominion.c to destroy any accumulated coverage data
 # - repeat for each unit test
 # - finally, run each unit test again, collecting cumulative coverage data from gcov, redirecting 
