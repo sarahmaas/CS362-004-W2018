@@ -41,12 +41,28 @@ public class UrlValidatorTest {
    	
    		// basic manual tests: 
    		// DEBUGGING NOTE: check UrlValidator line 282; schemes are converted to upper case 
-   		//				   instead of lower case, as required by isValid...
-   		//				   if ALLOW_ALL_SCHEMES flag is not set, this will cause all tests below to fail.
+   		// 		instead of lower case, as required by isValid...
+   		// 		if ALLOW_ALL_SCHEMES flag is not set, this will cause all tests below to fail.
    		
    		collector.checkThat("expect basic http-based URL to be valid", 
    				  	urlVal.isValid("http://www.google.com"), CoreMatchers.equalTo(true));
+			
+	   	collector.checkThat("expect https to be recognized", 
+	   				urlVal.isValid("https://www.google.com"), CoreMatchers.equalTo(true));
+
+	 	collector.checkThat("expect ftp scheme to register as valid", 
+ 	 				urlVal.isValid("ftp://foo.bar.com/"), CoreMatchers.equalTo(true));
+	   	
+	 	//
+	 	// now, testing with all schemes allowed
+	 	//
+	 	
+	 	urlVal = new UrlValidator(null, null, UrlValidator.ALLOW_ALL_SCHEMES);
    		
+	 	// DEBUGGING NOTE: line 318 in UrlValidator.java
+	 	// 		UrlValidator.java written such that "http" cannot allow trailing ':' in authority.
+	 	//		this should only be true for "file" schemes.
+	 	
    		collector.checkThat("expect port numbers to be valid", 
    				  	urlVal.isValid("http://www.google.com:65530"), CoreMatchers.equalTo(true));
    		
@@ -58,10 +74,10 @@ public class UrlValidatorTest {
    		collector.checkThat("expect numeric chars in hostname to register as valid", 
    				  	urlVal.isValid("http://www.g00gle.com"), CoreMatchers.equalTo(true));
    		
-   		collector.checkThat("expect invalid TLD chars to register as invalid", 
+   		collector.checkThat("expect invalid TLD chars to register URL as invalid", 
    				  	urlVal.isValid("http://www.google.c!m"), CoreMatchers.equalTo(false));
    		
-   		collector.checkThat("expect invalid hostname chars to register as invalid", 
+   		collector.checkThat("expect invalid hostname chars to register URL as invalid", 
    					urlVal.isValid("http://www.g!.com"), CoreMatchers.equalTo(false));
    		 		
    		// non-http protocols seem to be an issue, esp. with ALLOW_ALL_SCHEMES flag set:
@@ -69,17 +85,10 @@ public class UrlValidatorTest {
    		
    		try {
    			collector.checkThat("expect ftp scheme to register as valid", 
-   					urlVal.isValid("ftp://ftp.filestorage.com:5440"), CoreMatchers.equalTo(true));
+   					urlVal.isValid("ftp://ftp.filestorage.com"), CoreMatchers.equalTo(true));
    		} catch(Throwable err) {
    			collector.addError(err);
    		}
-  
- 	 	try {
- 	 		collector.checkThat("expect ftp scheme to register as valid", 
- 	 				urlVal.isValid("ftp://foo.bar.com/"), CoreMatchers.equalTo(true));
- 	 	} catch(Throwable err) {
- 	 		collector.addError(err);
- 	 	}	
  	 	
  	 	try {
  	   		collector.checkThat("expect https to be recognized", 
