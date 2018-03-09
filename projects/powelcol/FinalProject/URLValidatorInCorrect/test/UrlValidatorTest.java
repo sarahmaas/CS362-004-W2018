@@ -17,33 +17,23 @@ public class UrlValidatorTest {
 
 	@Test
 	public void testResultPairs() {
+		
+   		System.out.println("********Manual ResultPair Tests********");
+
 		// ResultPair is broken...see ResultPair.java in src dir.
 		ResultPair rp_true = new ResultPair("http://www.google.com", true);
 		ResultPair rp_false = new ResultPair("foo", false);
-//		boolean pass = true;   
 				
-//		System.out.println("Testing ResultPair objects...");
+		System.out.println("Testing ResultPair objects...");
 		collector.checkThat("ResultPair reporting incorrect valid property", rp_true.valid, CoreMatchers.equalTo(true));
 		collector.checkThat("ResultPair reporting incorrect valid property", rp_false.valid, CoreMatchers.equalTo(false));
-/*				
-		if(rp_true.valid != true) {
-			System.out.println("mismatch in ResultPair --> expected: " + true + " got: " + rp_true.valid);
-			pass = false;
-		}
-		if(rp_false.valid != false) {
-			System.out.println("mismatch in ResultPair --> expected: " + false + " got: " + rp_false.valid);		   
-			pass = false;
-		}		
-		if(pass) {
-			System.out.println("--ResultPair tests OK");
-		}
-*/
+		System.out.println("ResultPair testing complete.\n");
 	}
 	
 	@Test
    	public void testManualTest() {
 
-   		System.out.println("********Manual Tests********");
+   		System.out.println("********Manual URL Tests********");
 		
 		System.out.println("Testing URLs...");
 		String[] schemes = { "http", "https", "ftp" };
@@ -56,9 +46,6 @@ public class UrlValidatorTest {
    		
    		collector.checkThat("expect basic http-based URL to be valid", 
    				  	urlVal.isValid("http://www.google.com"), CoreMatchers.equalTo(true));
-   		
-   		collector.checkThat("expect https to be recognized", 
-   					urlVal.isValid("https://www.google.com"), CoreMatchers.equalTo(true));
    		
    		collector.checkThat("expect port numbers to be valid", 
    				  	urlVal.isValid("http://www.google.com:65530"), CoreMatchers.equalTo(true));
@@ -79,23 +66,29 @@ public class UrlValidatorTest {
    		 		
    		// non-http protocols seem to be an issue, esp. with ALLOW_ALL_SCHEMES flag set:
    		// wrap in try/catch blocks to catch errors without terminating program
+   		
    		try {
    			collector.checkThat("expect ftp scheme to register as valid", 
    					urlVal.isValid("ftp://ftp.filestorage.com:5440"), CoreMatchers.equalTo(true));
-   		} 
-   		catch(Throwable err) {
+   		} catch(Throwable err) {
    			collector.addError(err);
    		}
   
  	 	try {
  	 		collector.checkThat("expect ftp scheme to register as valid", 
  	 				urlVal.isValid("ftp://foo.bar.com/"), CoreMatchers.equalTo(true));
- 	 	}
- 	 	catch(Throwable err) {
+ 	 	} catch(Throwable err) {
  	 		collector.addError(err);
- 	 	}		
+ 	 	}	
+ 	 	
+ 	 	try {
+ 	   		collector.checkThat("expect https to be recognized", 
+   					urlVal.isValid("https://www.google.com"), CoreMatchers.equalTo(true));
+ 	 	} catch(Throwable err) {
+ 	 		collector.addError(err);
+ 	 	}	 	 	
 	   
-   		System.out.println("Manual Tests Complete");
+   		System.out.println("Manual testing complete\n");
    }
    
    @Test
