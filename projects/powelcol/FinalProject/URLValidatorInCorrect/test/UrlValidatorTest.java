@@ -1,49 +1,99 @@
+/*
+ * CS362
+ * Final Project: Part B
+ * Sarah Maas (maass), Colin Powell (powelcol), Josh Williams (willijo4)
+ */
 
+import org.junit.Rule;
+import org.junit.Test;
+//import junit.framework.TestCase;
+import org.junit.rules.ErrorCollector;
+import org.hamcrest.CoreMatchers;
 
-import junit.framework.TestCase;
+public class UrlValidatorTest {
+	
+	@Rule
+	public ErrorCollector collector = new ErrorCollector();
 
-//You can use this as a skeleton for your 3 different test approach
-//It is an optional to use this file, you can generate your own test file(s) to test the target function!
-// Again, it is up to you to use this file or not!
+	@Test
+	public void testResultPairs() {
+		// ResultPair is broken...see ResultPair.java in src dir.
+		ResultPair rp_true = new ResultPair("http://www.google.com", true);
+		ResultPair rp_false = new ResultPair("foo", false);
+//		boolean pass = true;   
+				
+//		System.out.println("Testing ResultPair objects...");
+		collector.checkThat("ResultPair reporting incorrect valid property", rp_true.valid, CoreMatchers.equalTo(true));
+		collector.checkThat("ResultPair reporting incorrect valid property", rp_false.valid, CoreMatchers.equalTo(false));
+/*				
+		if(rp_true.valid != true) {
+			System.out.println("mismatch in ResultPair --> expected: " + true + " got: " + rp_true.valid);
+			pass = false;
+		}
+		if(rp_false.valid != false) {
+			System.out.println("mismatch in ResultPair --> expected: " + false + " got: " + rp_false.valid);		   
+			pass = false;
+		}		
+		if(pass) {
+			System.out.println("--ResultPair tests OK");
+		}
+*/
+	}
+	
+	@Test
+   	public void testManualTest() {
 
-
-
-
-
-public class UrlValidatorTest extends TestCase {
-
-
-   public UrlValidatorTest(String testName) {
-      super(testName);
-   }
-
-   
-   
-   public void testManualTest()
-   {
-//You can use this function to implement your manual testing	   
+   		System.out.println("********Manual Tests********");
+		
+		System.out.println("Testing URLs...");
+   		UrlValidator urlVal = new UrlValidator(null, null, UrlValidator.ALLOW_ALL_SCHEMES);
+   	
+   		// basic manual tests: 
+   		
+   		collector.checkThat("expect basic URL to be valid", 
+   				  urlVal.isValid("http://www.google.com"), CoreMatchers.equalTo(true));
+   		
+   		collector.checkThat("expect port numbers to be valid", 
+   				  urlVal.isValid("http://www.google.com:65530"), CoreMatchers.equalTo(true));
+   		
+   		collector.checkThat("expect query string to register as valid", 
+   				  urlVal.isValid("http://www.google.com?foo=bar&baz=bam"), CoreMatchers.equalTo(true));
+   		
+   		//RFC 1123: hostnames must be alphanumeric:
+   		
+   		collector.checkThat("expect numeric chars in hostname to register as valid", 
+   				  urlVal.isValid("http://www.g00gle.com"), CoreMatchers.equalTo(true));
+   		
+   		collector.checkThat("expect invalid TLD chars to register as invalid", 
+   				  urlVal.isValid("http://www.google.c!m"), CoreMatchers.equalTo(false));
+   		
+   		collector.checkThat("expect invalid hostname chars to register as invalid", 
+   				  urlVal.isValid("http://www.g!.com"), CoreMatchers.equalTo(false));
+   	 		
+   		//These actually cause errors:
+//   	collector.checkThat(urlVal.isValid("ftp://ftp.filestorage.com:5440"), CoreMatchers.equalTo(true));
+//		collector.checkThat(urlVal.isValid("ftp://ftp.foo.com/file.txt"), CoreMatchers.equalTo(true));
 	   
+   		System.out.println("Manual Tests Complete");
    }
    
-   
-   public void testYourFirstPartition()
-   {
+   @Test
+   public void testYourFirstPartition() {
 	 //You can use this function to implement your First Partition testing	   
 
    }
    
-   public void testYourSecondPartition(){
+   @Test
+   public void testYourSecondPartition() {
 		 //You can use this function to implement your Second Partition testing	   
 
    }
-   //You need to create more test cases for your Partitions if you need to 
+   //You may need to create more test cases for your Partitions
    
-   public void testIsValid()
-   {
+   @Test
+   public void testIsValid() {
 	   //You can use this function for programming based testing
 
    }
-   
-
 
 }
