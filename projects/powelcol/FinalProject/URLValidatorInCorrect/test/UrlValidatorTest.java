@@ -83,13 +83,13 @@ public class UrlValidatorTest {
    		for( int i = 0; i < urls.length; i++ ) {		   			
    			// wrap in try/catch to handle errors (instead of test failures)		
    			try {			
-   	   			validTest = validator.isValid(urls[i].getUrl());
+   	   			validTest = validator.isValid(urls[i].getItem());
 	   			// collect test data for each URL under test
 	   			collector.checkThat( urls[i].getPurpose(), validTest, CoreMatchers.equalTo(urls[i].getValid()) );
 	 
 	   			if(PRINT_FAILURES && (validTest != urls[i].getValid())) {	   				
 	   				System.out.println("--FAILURE: " + urls[i].getPurpose() + 
-	   								   " --> URL: " + urls[i].getUrl() + 
+	   								   " --> URL: " + urls[i].getItem() + 
 	   								   ", Expected: " + urls[i].getValid() + 
 	   								   ", Observed: " + validTest);
 	   			}
@@ -103,12 +103,12 @@ public class UrlValidatorTest {
    		
    		for( int i = 0; i < urls.length; i++ ) {		   			
    			try {			
-   	   			validTest = validatorAllSchemes.isValid(urls[i].getUrl());
+   	   			validTest = validatorAllSchemes.isValid(urls[i].getItem());
 	   			collector.checkThat( urls[i].getPurpose(), validTest, CoreMatchers.equalTo(urls[i].getValid()) );
 	 
 	   			if(PRINT_FAILURES && (validTest != urls[i].getValid())) {   				
 	   				System.out.println("--FAILURE: " + urls[i].getPurpose() + 
-	   								   " --> URL: " + urls[i].getUrl() + 
+	   								   " --> URL: " + urls[i].getItem() + 
 	   								   ", Expected: " + urls[i].getValid() + 
 	   								   ", Observed: " + validTest);
 	   			}

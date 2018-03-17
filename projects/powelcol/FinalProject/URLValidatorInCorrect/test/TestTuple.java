@@ -9,17 +9,17 @@
 public class TestTuple {
 
 	private boolean valid;
-	private String url;
+	private String item;
 	private String purpose;
 	
 	public TestTuple(String purpose, String url, boolean valid) {
 		this.purpose = purpose;
-		this.url = url;
+		this.item = url;
 		this.valid = valid;
 	}
 	
 	public TestTuple(String url, boolean valid) {
-		this.url = url;
+		this.item = url;
 		this.valid = valid;
 		this.purpose = "";
 	}
@@ -32,8 +32,8 @@ public class TestTuple {
 		return this.valid;
 	}
 	
-	public String getUrl() {
-		return this.url;
+	public String getItem() {
+		return this.item;
 	}
 	
 }
