@@ -12,6 +12,8 @@ import org.hamcrest.CoreMatchers;
 
 public class UrlValidatorTest {
 	
+	boolean PRINT_FAILURES = true;
+	
 	@Rule
 	public ErrorCollector collector = new ErrorCollector();
 
@@ -35,69 +37,90 @@ public class UrlValidatorTest {
 
    		System.out.println("********Manual URL Tests********");
 		
+   		boolean validTest = false;
+   		
 		System.out.println("Testing URLs...");
 		String[] schemes = { "http", "https", "ftp" };
-   		UrlValidator urlVal = new UrlValidator(schemes);
-   	
+   		
+		UrlValidator validator = new UrlValidator(schemes);
+   		UrlValidator validatorAllSchemes = new UrlValidator(UrlValidator.ALLOW_ALL_SCHEMES);
+   
    		// basic manual tests: 
    		// DEBUGGING NOTE: check UrlValidator line 282; schemes are converted to upper case 
    		// 		instead of lower case, as required by isValid...
-   		// 		if ALLOW_ALL_SCHEMES flag is not set, this will cause all tests below to fail.
-   		
-   		collector.checkThat("expect basic http-based URL to be valid", 
-   				  	urlVal.isValid("http://www.google.com"), CoreMatchers.equalTo(true));
-			
-	   	collector.checkThat("expect https to be recognized", 
-	   				urlVal.isValid("https://www.google.com"), CoreMatchers.equalTo(true));
-
-	 	collector.checkThat("expect ftp scheme to register as valid", 
- 	 				urlVal.isValid("ftp://foo.bar.com/"), CoreMatchers.equalTo(true));
-	   	
-	 	//
-	 	// now, testing with all schemes allowed
-	 	//
-	 	
-	 	urlVal = new UrlValidator(null, null, UrlValidator.ALLOW_ALL_SCHEMES);
+   		// 		if ALLOW_ALL_SCHEMES flag is not set, this will cause all tests below to return invalid.
    		
 	 	// DEBUGGING NOTE: line 318 in UrlValidator.java
 	 	// 		UrlValidator.java written such that "http" cannot allow trailing ':' in authority.
 	 	//		this should only be true for "file" schemes.
-	 	
-   		collector.checkThat("expect port numbers to be valid", 
-   				  	urlVal.isValid("http://www.google.com:65530"), CoreMatchers.equalTo(true));
    		
-   		collector.checkThat("expect query string to register as valid", 
-   				  	urlVal.isValid("http://www.google.com?foo=bar&baz=bam"), CoreMatchers.equalTo(true));
-   		
-   		//RFC 1123: hostnames must be alphanumeric:
-   		
-   		collector.checkThat("expect numeric chars in hostname to register as valid", 
-   				  	urlVal.isValid("http://www.g00gle.com"), CoreMatchers.equalTo(true));
-   		
-   		collector.checkThat("expect invalid TLD chars to register URL as invalid", 
-   				  	urlVal.isValid("http://www.google.c!m"), CoreMatchers.equalTo(false));
-   		
-   		collector.checkThat("expect invalid hostname chars to register URL as invalid", 
-   					urlVal.isValid("http://www.g!.com"), CoreMatchers.equalTo(false));
-   		 		
    		// non-http protocols seem to be an issue, esp. with ALLOW_ALL_SCHEMES flag set:
    		// wrap in try/catch blocks to catch errors without terminating program
    		
-   		try {
-   			collector.checkThat("expect ftp scheme to register as valid", 
-   					urlVal.isValid("ftp://ftp.filestorage.com"), CoreMatchers.equalTo(true));
-   		} catch(Throwable err) {
-   			collector.addError(err);
+   		System.out.println("Testing with specified http, https, ftp schemes: ");
+   		
+   		TestTuple [] urls = { 	
+   								new TestTuple("basic http URL test", "http://www.google.com", true),
+   								new TestTuple("basic https URL test", "https://www.google.com", true),
+   								new TestTuple("basic ftp URL test", "ftp://foo.bar.com", true),
+   								
+   								new TestTuple("ports should be recognized", "http://www.google.com:65545", true),
+   								new TestTuple("invalid port cannot be in URL", "http://www.google.com:-1", false),
+
+   								// RFC 1123: hostnames must be alphanumeric
+   								new TestTuple("special chars cannot be in domain", "http://www.g!.com", false),
+   								new TestTuple("special chars cannot be in TLD", "http://www.google.c!m", false),
+   								new TestTuple("numeric chars allowed in hostname", "http://www.g00gle.com", true),
+   								
+   								new TestTuple("query string should be recognized", "http://www.google.com?foo=bar&baz=bam", true)
+   							};
+
+   		/*
+   		* loop through manual tests 
+   		* don't decompose into a single loop to give more detailed / informative error handling
+   		*/
+   	
+   		for( int i = 0; i < urls.length; i++ ) {		   			
+   			// wrap in try/catch to handle errors (instead of test failures)		
+   			try {			
+   	   			validTest = validator.isValid(urls[i].getUrl());
+	   			// collect test data for each URL under test
+	   			collector.checkThat( urls[i].getPurpose(), validTest, CoreMatchers.equalTo(urls[i].getValid()) );
+	 
+	   			if(PRINT_FAILURES && (validTest != urls[i].getValid())) {	   				
+	   				System.out.println("--FAILURE: " + urls[i].getPurpose() + 
+	   								   " --> URL: " + urls[i].getUrl() + 
+	   								   ", Expected: " + urls[i].getValid() + 
+	   								   ", Observed: " + validTest);
+	   			}
+   			} 
+   			catch (Throwable err) {  		
+   				collector.addError(err);		
+   			}  			
    		}
- 	 	
- 	 	try {
- 	   		collector.checkThat("expect https to be recognized", 
-   					urlVal.isValid("https://www.google.com"), CoreMatchers.equalTo(true));
- 	 	} catch(Throwable err) {
- 	 		collector.addError(err);
- 	 	}	 	 	
-	   
+   		
+   		System.out.println("Testing with ALLOW_ALL_SCHEMES set:");
+   		
+   		for( int i = 0; i < urls.length; i++ ) {		   			
+   			try {			
+   	   			validTest = validatorAllSchemes.isValid(urls[i].getUrl());
+	   			collector.checkThat( urls[i].getPurpose(), validTest, CoreMatchers.equalTo(urls[i].getValid()) );
+	 
+	   			if(PRINT_FAILURES && (validTest != urls[i].getValid())) {   				
+	   				System.out.println("--FAILURE: " + urls[i].getPurpose() + 
+	   								   " --> URL: " + urls[i].getUrl() + 
+	   								   ", Expected: " + urls[i].getValid() + 
+	   								   ", Observed: " + validTest);
+	   			}
+   			} 
+   			catch (Throwable err) {  		
+   				collector.addError(err);		
+   			}  			
+   		}	
+   		
+   		
    		System.out.println("Manual testing complete\n");
+ 
    }
    
    @Test
