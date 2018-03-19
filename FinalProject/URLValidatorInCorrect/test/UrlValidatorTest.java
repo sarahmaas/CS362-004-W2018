@@ -1,6 +1,5 @@
-
-
 import junit.framework.TestCase;
+import java.util.Random;
 
 //You can use this as a skeleton for your 3 different test approach
 //It is an optional to use this file, you can generate your own test file(s) to test the target function!
@@ -22,7 +21,7 @@ public class UrlValidatorTest extends TestCase {
    public void testManualTest()
    {
 //You can use this function to implement your manual testing	   
-	   
+	   UrlValidator val = new UrlValidator();
    }
    
    
@@ -41,7 +40,7 @@ public class UrlValidatorTest extends TestCase {
    public void testIsValid()
    {
 	   //You can use this function for programming based testing
-
+	   // using URLs from http://formvalidation.io/validators/uri/
    }
    
 
