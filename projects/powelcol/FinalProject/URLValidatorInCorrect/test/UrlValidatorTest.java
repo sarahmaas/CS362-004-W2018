@@ -220,7 +220,8 @@ public class UrlValidatorTest {
 		   String urlGenerated;
 		   TestTuple[] testUrl = new TestTuple[5];
 		   Random rand = new Random(); 
-		   
+		   System.out.println("_________________________________________________________");
+		   System.out.println("             BEGINNING RANDOMIZED UNIT TEST              ");
 		   // combine from the testtuples and test combinations
 		   for(int i = 0; i < trials; i++) {
 			   // get random scheme
@@ -248,20 +249,22 @@ public class UrlValidatorTest {
 			   } catch (Throwable err) {
 				   collector.addError(err);
 			   }
-			   
+
 			   // test if url validator returns the same value
 			   // as the test tuples (control value)
+			   collector.checkThat(validator.isValid(urlGenerated), CoreMatchers.equalTo(expectedResult));
+			   // log results to console
 			   if (expectedResult != actualResult) {
 				   failedTests++;
 				   System.out.println("--FAILURE: " + urlGenerated + "-> expected: "
 						   + expectedResult + " actual: " + actualResult);
 			   }
 		   }
-		   
-		   System.out.println("________________________________________");
-		   System.out.println("    RANDOMIZED UNIT TEST RESULTS ");
+		   // log final results to console
+		   System.out.println("_________________________________________________________");
+		   System.out.println("             RANDOMIZED UNIT TEST RESULTS ");
 		   System.out.println(failedTests + " failures out of " + trials);
-		   System.out.println("________________________________________"); 
+		   System.out.println("_________________________________________________________"); 
 	   }
 	   
 	   // Most of these test cases were borrowed from the Apache commons
