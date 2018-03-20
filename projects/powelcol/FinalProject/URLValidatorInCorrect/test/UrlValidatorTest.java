@@ -208,16 +208,11 @@ public class UrlValidatorTest {
 		// Test that the schemes are valid
 		collector.checkThat("expect basic http-based URL to be valid", 
 		  	urlVal.isValid("http://www.google.com"), CoreMatchers.equalTo(true));
-		collector.checkThat("expect basic http-based URL to be valid", 
+		collector.checkThat("expect basic https-based URL to be valid", 
 			urlVal.isValid("https://www.google.com"), CoreMatchers.equalTo(true));
-		collector.checkThat("expect basic http-based URL to be valid", 
+		collector.checkThat("expect basic ftp-based URL to be valid", 
 			urlVal.isValid("ftp://foo.bar.com/"), CoreMatchers.equalTo(true));
-		collector.checkThat("expect basic http-based URL to be valid", 
-				urlVal.isValid("h3t://foo.bar.com/"), CoreMatchers.equalTo(true));
-		collector.checkThat("expect basic http-based URL to be valid", 
-				urlVal.isValid("foo.bar.com/"), CoreMatchers.equalTo(true));
 	
-		
 		urlVal = new UrlValidator(null, null, UrlValidator.ALLOW_ALL_SCHEMES);
 		
 		// Test several ports that are within range
@@ -389,47 +384,47 @@ public class UrlValidatorTest {
 	  	System.out.println("SECOND PARTITION: INVALID URLS");
 		
 		System.out.println("Testing invalid URLs...");
-		String[] schemes = { "http", "https", "ftp" };
-		UrlValidator urlVal = new UrlValidator(schemes);
+
+		UrlValidator urlVal = new UrlValidator(null, null, UrlValidator.ALLOW_ALL_SCHEMES);
 
 	  	// Test URLs with invalid scheme
 		try {
-			collector.checkThat("expect basic http-based URL to be valid", urlVal.isValid("httcs://www.google.com"), CoreMatchers.equalTo(false));	   
+			collector.checkThat("invalid scheme should produce invalid URL", urlVal.isValid("!https://www.google.com"), CoreMatchers.equalTo(false));	   
 		} catch (Throwable err) {
 	   		collector.addError(err);
 	   	}
 		try {
-			collector.checkThat("expect basic http-based URL to be valid", urlVal.isValid("phtp://www.foo.com"), CoreMatchers.equalTo(false));	   
+			collector.checkThat("invalid scheme should produce invalid URL", urlVal.isValid("phtp*://www.foo.com"), CoreMatchers.equalTo(false));	   
 		} catch (Throwable err) {
 	   		collector.addError(err);
 	   	}
 		try {
-			collector.checkThat("expect basic http-based URL to be valid", urlVal.isValid("h++p://www.google.com"), CoreMatchers.equalTo(false));	   
+			collector.checkThat("invalid scheme should produce invalid URL", urlVal.isValid("h++p://www.google.com"), CoreMatchers.equalTo(false));	   
 		} catch (Throwable err) {
 	   		collector.addError(err);
 	   	}
 		try {
-			collector.checkThat("expect basic http-based URL to be valid", urlVal.isValid("http:/www.google.com"), CoreMatchers.equalTo(false));	   
+			collector.checkThat("invalid scheme syntax should produce invalid URL", urlVal.isValid("http:/www.google.com"), CoreMatchers.equalTo(false));	   
 		} catch (Throwable err) {
 	   		collector.addError(err);
 	   	}
 		try {
-			collector.checkThat("expect basic http-based URL to be valid", urlVal.isValid("http:www.google.com"), CoreMatchers.equalTo(false));	   
+			collector.checkThat("invalid scheme syntax should produce invalid URL", urlVal.isValid("http:www.google.com"), CoreMatchers.equalTo(false));	   
 		} catch (Throwable err) {
 	   		collector.addError(err);
 	   	}
 		try {
-			collector.checkThat("expect basic http-based URL to be valid", urlVal.isValid("http/www.google.com"), CoreMatchers.equalTo(false));	   
+			collector.checkThat("invalid scheme syntax should produce invalid URL", urlVal.isValid("http/www.google.com"), CoreMatchers.equalTo(false));	   
 		} catch (Throwable err) {
 	   		collector.addError(err);
 	   	}
 		try {
-			collector.checkThat("expect basic http-based URL to be valid", urlVal.isValid("://www.google.com"), CoreMatchers.equalTo(false));	   
+			collector.checkThat("invalid scheme syntax should produce invalid URL", urlVal.isValid("://www.google.com"), CoreMatchers.equalTo(false));	   
 		} catch (Throwable err) {
 	   		collector.addError(err);
 	   	}
 		try {
-			collector.checkThat("expect basic http-based URL to be valid", urlVal.isValid("3ht://www.google.com"), CoreMatchers.equalTo(false));	   
+			collector.checkThat("invalid scheme should produce invalid URL", urlVal.isValid("3ht://www.google.com"), CoreMatchers.equalTo(false));	   
 		} catch (Throwable err) {
 	   		collector.addError(err);
 	   	}
