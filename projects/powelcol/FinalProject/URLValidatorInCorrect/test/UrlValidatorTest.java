@@ -197,196 +197,196 @@ public class UrlValidatorTest {
    
    @Test
    public void testYourFirstPartition() {	 
-	 // Set a few valid URLs that should be valid, then test those
-
-  	System.out.println("********First Partition: Valid URLs********");
+		 // Set a few valid URLs that should be valid, then test those
+	
+	  	System.out.println("FIRST PARTITION: VALID URLS");
+			
+		System.out.println("Testing valid URLs...");
+		String[] schemes = { "http", "https", "ftp" };
+		UrlValidator urlVal = new UrlValidator(schemes);
 		
-	System.out.println("Testing valid URLs...");
-	String[] schemes = { "http", "https", "ftp" };
-	UrlValidator urlVal = new UrlValidator(schemes);
+		// Test that the schemes are valid
+		collector.checkThat("expect basic http-based URL to be valid", 
+		  	urlVal.isValid("http://www.google.com"), CoreMatchers.equalTo(true));
+		collector.checkThat("expect basic http-based URL to be valid", 
+			urlVal.isValid("https://www.google.com"), CoreMatchers.equalTo(true));
+		collector.checkThat("expect basic http-based URL to be valid", 
+			urlVal.isValid("ftp://foo.bar.com/"), CoreMatchers.equalTo(true));
+		collector.checkThat("expect basic http-based URL to be valid", 
+				urlVal.isValid("h3t://foo.bar.com/"), CoreMatchers.equalTo(true));
+		collector.checkThat("expect basic http-based URL to be valid", 
+				urlVal.isValid("foo.bar.com/"), CoreMatchers.equalTo(true));
 	
-	// Test that the schemes are valid
-	collector.checkThat("expect basic http-based URL to be valid", 
-	  	urlVal.isValid("http://www.google.com"), CoreMatchers.equalTo(true));
-	collector.checkThat("expect basic http-based URL to be valid", 
-		urlVal.isValid("https://www.google.com"), CoreMatchers.equalTo(true));
-	collector.checkThat("expect basic http-based URL to be valid", 
-		urlVal.isValid("ftp://foo.bar.com/"), CoreMatchers.equalTo(true));
-	collector.checkThat("expect basic http-based URL to be valid", 
-			urlVal.isValid("h3t://foo.bar.com/"), CoreMatchers.equalTo(true));
-	collector.checkThat("expect basic http-based URL to be valid", 
-			urlVal.isValid("foo.bar.com/"), CoreMatchers.equalTo(true));
-
-	
-	urlVal = new UrlValidator(null, null, UrlValidator.ALLOW_ALL_SCHEMES);
-	
-	// Test several ports that are within range
-	try {
-		collector.checkThat("Port # should be correct", urlVal.isValid("http://www.google.com"), CoreMatchers.equalTo(true));
-   	} catch (Throwable err) {
-   		collector.addError(err);
-   	}
-	try {
-		collector.checkThat("Port # should be correct", urlVal.isValid("http://www.google.com:0"), CoreMatchers.equalTo(true));
-   	} catch (Throwable err) {
-   		collector.addError(err);
-   	}
-	try {
-		collector.checkThat("Port # should be correct", urlVal.isValid("http://www.google.com:80"), CoreMatchers.equalTo(true));
-   	} catch (Throwable err) {
-   		collector.addError(err);
-   	}
-	try {
-		collector.checkThat("Port # should be correct", urlVal.isValid("http://www.google.com:555"), CoreMatchers.equalTo(true));
-   	} catch (Throwable err) {
-   		collector.addError(err);
-   	}
-	try {
-		collector.checkThat("Port # should be correct", urlVal.isValid("http://www.google.com:4000"), CoreMatchers.equalTo(true));
-   	} catch (Throwable err) {
-   		collector.addError(err);
-   	}
-	try {
-		collector.checkThat("Port # should be correct", urlVal.isValid("http://www.google.com:65535"), CoreMatchers.equalTo(true));
-	} catch (Throwable err) {
-   		collector.addError(err);
-   	}
 		
-	// Test valid authorities
-	try {
-		collector.checkThat("Authority should be correct", urlVal.isValid("http://www.google.com"), CoreMatchers.equalTo(true));
-	} catch (Throwable err) {
-   		collector.addError(err);
-   	}
-	try {
-		collector.checkThat("Authority should be correct", urlVal.isValid("go.com"), CoreMatchers.equalTo(true));
-	} catch (Throwable err) {
-   		collector.addError(err);
-   	}
-	try {
-		collector.checkThat("Authority should be correct", urlVal.isValid("go.au"), CoreMatchers.equalTo(true));
-	} catch (Throwable err) {
-   		collector.addError(err);
-   	}
-	try {
-		collector.checkThat("Authority should be correct", urlVal.isValid("0.0.0.0"), CoreMatchers.equalTo(true));
-	} catch (Throwable err) {
-   		collector.addError(err);
-   	}
-	try {
-		collector.checkThat("Authority should be correct", urlVal.isValid("255.255.255.255"), CoreMatchers.equalTo(true));
-	} catch (Throwable err) {
-   		collector.addError(err);
-   	}
-	try {
-		collector.checkThat("Authority should be correct", urlVal.isValid("255.com"), CoreMatchers.equalTo(true));
-	} catch (Throwable err) {
-   		collector.addError(err);
-   	}
+		urlVal = new UrlValidator(null, null, UrlValidator.ALLOW_ALL_SCHEMES);
+		
+		// Test several ports that are within range
+		try {
+			collector.checkThat("Port # should be correct", urlVal.isValid("http://www.google.com"), CoreMatchers.equalTo(true));
+	   	} catch (Throwable err) {
+	   		collector.addError(err);
+	   	}
+		try {
+			collector.checkThat("Port # should be correct", urlVal.isValid("http://www.google.com:0"), CoreMatchers.equalTo(true));
+	   	} catch (Throwable err) {
+	   		collector.addError(err);
+	   	}
+		try {
+			collector.checkThat("Port # should be correct", urlVal.isValid("http://www.google.com:80"), CoreMatchers.equalTo(true));
+	   	} catch (Throwable err) {
+	   		collector.addError(err);
+	   	}
+		try {
+			collector.checkThat("Port # should be correct", urlVal.isValid("http://www.google.com:555"), CoreMatchers.equalTo(true));
+	   	} catch (Throwable err) {
+	   		collector.addError(err);
+	   	}
+		try {
+			collector.checkThat("Port # should be correct", urlVal.isValid("http://www.google.com:4000"), CoreMatchers.equalTo(true));
+	   	} catch (Throwable err) {
+	   		collector.addError(err);
+	   	}
+		try {
+			collector.checkThat("Port # should be correct", urlVal.isValid("http://www.google.com:65535"), CoreMatchers.equalTo(true));
+		} catch (Throwable err) {
+	   		collector.addError(err);
+	   	}
+			
+		// Test valid authorities
+		try {
+			collector.checkThat("Authority should be correct", urlVal.isValid("http://www.google.com"), CoreMatchers.equalTo(true));
+		} catch (Throwable err) {
+	   		collector.addError(err);
+	   	}
+		try {
+			collector.checkThat("Authority should be correct", urlVal.isValid("go.com"), CoreMatchers.equalTo(true));
+		} catch (Throwable err) {
+	   		collector.addError(err);
+	   	}
+		try {
+			collector.checkThat("Authority should be correct", urlVal.isValid("go.au"), CoreMatchers.equalTo(true));
+		} catch (Throwable err) {
+	   		collector.addError(err);
+	   	}
+		try {
+			collector.checkThat("Authority should be correct", urlVal.isValid("0.0.0.0"), CoreMatchers.equalTo(true));
+		} catch (Throwable err) {
+	   		collector.addError(err);
+	   	}
+		try {
+			collector.checkThat("Authority should be correct", urlVal.isValid("255.255.255.255"), CoreMatchers.equalTo(true));
+		} catch (Throwable err) {
+	   		collector.addError(err);
+	   	}
+		try {
+			collector.checkThat("Authority should be correct", urlVal.isValid("255.com"), CoreMatchers.equalTo(true));
+		} catch (Throwable err) {
+	   		collector.addError(err);
+	   	}
+		
+		// Test several valid paths
+		try {
+			collector.checkThat("Path should be valid", urlVal.isValid("https://www.google.com/mail"), CoreMatchers.equalTo(true));
+		} catch (Throwable err) {
+	   		collector.addError(err);
+	   	}
+		try {
+			collector.checkThat("Path should be valid", urlVal.isValid("https://www.google.com/maps"), CoreMatchers.equalTo(true));
+		} catch (Throwable err) {
+	   		collector.addError(err);
+	   	}
+		try {
+			collector.checkThat("Path should be valid", urlVal.isValid("https://www.google.com/flights"), CoreMatchers.equalTo(true));
+		} catch (Throwable err) {
+	   		collector.addError(err);
+	   	}
+		try {
+			collector.checkThat("Path should be valid", urlVal.isValid("https://www.google.com/test1"), CoreMatchers.equalTo(true));
+		} catch (Throwable err) {
+	   		collector.addError(err);
+	   	}
+		try {
+			collector.checkThat("Path should be valid", urlVal.isValid("https://www.google.com/t123"), CoreMatchers.equalTo(true));
+		} catch (Throwable err) {
+	   		collector.addError(err);
+	   	}
+		try {
+			collector.checkThat("Path should be valid", urlVal.isValid("https://www.google.com/$23"), CoreMatchers.equalTo(true));
+		} catch (Throwable err) {
+	   		collector.addError(err);
+	   	}
+		try {
+			collector.checkThat("Path should be valid", urlVal.isValid("https://www.google.com/test1/"), CoreMatchers.equalTo(true));
+		} catch (Throwable err) {
+	   		collector.addError(err);
+	   	}
+		try {
+			collector.checkThat("Path should be valid", urlVal.isValid("https://www.google.com/test1/file"), CoreMatchers.equalTo(true));
+		} catch (Throwable err) {
+	   		collector.addError(err);
+	   	}
+		try {
+			collector.checkThat("Path should be valid", urlVal.isValid("https://www.google.com/"), CoreMatchers.equalTo(true));
+		} catch (Throwable err) {
+	   		collector.addError(err);
+	   	}
 	
-	// Test several valid paths
-	try {
-		collector.checkThat("Path should be valid", urlVal.isValid("https://www.google.com/mail"), CoreMatchers.equalTo(true));
-	} catch (Throwable err) {
-   		collector.addError(err);
-   	}
-	try {
-		collector.checkThat("Path should be valid", urlVal.isValid("https://www.google.com/maps"), CoreMatchers.equalTo(true));
-	} catch (Throwable err) {
-   		collector.addError(err);
-   	}
-	try {
-		collector.checkThat("Path should be valid", urlVal.isValid("https://www.google.com/flights"), CoreMatchers.equalTo(true));
-	} catch (Throwable err) {
-   		collector.addError(err);
-   	}
-	try {
-		collector.checkThat("Path should be valid", urlVal.isValid("https://www.google.com/test1"), CoreMatchers.equalTo(true));
-	} catch (Throwable err) {
-   		collector.addError(err);
-   	}
-	try {
-		collector.checkThat("Path should be valid", urlVal.isValid("https://www.google.com/t123"), CoreMatchers.equalTo(true));
-	} catch (Throwable err) {
-   		collector.addError(err);
-   	}
-	try {
-		collector.checkThat("Path should be valid", urlVal.isValid("https://www.google.com/$23"), CoreMatchers.equalTo(true));
-	} catch (Throwable err) {
-   		collector.addError(err);
-   	}
-	try {
-		collector.checkThat("Path should be valid", urlVal.isValid("https://www.google.com/test1/"), CoreMatchers.equalTo(true));
-	} catch (Throwable err) {
-   		collector.addError(err);
-   	}
-	try {
-		collector.checkThat("Path should be valid", urlVal.isValid("https://www.google.com/test1/file"), CoreMatchers.equalTo(true));
-	} catch (Throwable err) {
-   		collector.addError(err);
-   	}
-	try {
-		collector.checkThat("Path should be valid", urlVal.isValid("https://www.google.com/"), CoreMatchers.equalTo(true));
-	} catch (Throwable err) {
-   		collector.addError(err);
-   	}
-
-	// Test several valid queries
-	try {
-		collector.checkThat("Query should be valid", urlVal.isValid("http://www.google.com?foo=bar&baz=bam"), CoreMatchers.equalTo(true));
-	} catch (Throwable err) {
-   		collector.addError(err);
-   	}
-	try {
-		collector.checkThat("Query should be valid", urlVal.isValid("https://www.google.com/search?safe=off&source=hp&ei=7QavWqioM4nXjwSz2bmIBQ&q=who+there&oq=who+there&gs_l=psy-ab.3..0l3j0i10k1j0l6.42298.43886.0.44040.13.8.0.0.0.0.114.708.7j1.8.0....0...1c.1.64.psy-ab..5.8.708.0..46j0i131k1j0i46k1.0.xNFhvn885ic"), CoreMatchers.equalTo(true));
-	} catch (Throwable err) {
-   		collector.addError(err);
-   	}
-	try {
-		collector.checkThat("Query should be valid", urlVal.isValid("http://www.google.com?name=John&city=NYC"), CoreMatchers.equalTo(true));
-	} catch (Throwable err) {
-   		collector.addError(err);
-   	}
-	try {
-		collector.checkThat("Query should be valid", urlVal.isValid("http://www.google.com?action=view"), CoreMatchers.equalTo(true));
-	} catch (Throwable err) {
-   		collector.addError(err);
-   	}
-	try {
-		collector.checkThat("Query should be valid", urlVal.isValid("http://www.google.com?action=edit&mode=up"), CoreMatchers.equalTo(true));
-	} catch (Throwable err) {
-   		collector.addError(err);
-   	}
-	try {
-		collector.checkThat("Query should be valid", urlVal.isValid("http://www.google.com"), CoreMatchers.equalTo(true));
-	} catch (Throwable err) {
-   		collector.addError(err);
-   	}
-
-	// Test valid URL fragments
-	try {
-		collector.checkThat("URL fragment should be valid", urlVal.isValid("http://www.google.com/mail#two"), CoreMatchers.equalTo(true));
-	} catch (Throwable err) {
-   		collector.addError(err);
-   	}
-	try {
-		collector.checkThat("URL fragment should be valid", urlVal.isValid("http://www.example.org/foo.html#bar"), CoreMatchers.equalTo(true));
-	} catch (Throwable err) {
-   		collector.addError(err);
-   	}
-	try {
-		collector.checkThat("URL fragment should be valid", urlVal.isValid("http://www.w3.org/2004/02/skos/core#broader"), CoreMatchers.equalTo(true));
-	} catch (Throwable err) {
-   		collector.addError(err);
-   	}
- 	
-  	System.out.println("********First Partition Complete********\n");
+		// Test several valid queries
+		try {
+			collector.checkThat("Query should be valid", urlVal.isValid("http://www.google.com?foo=bar&baz=bam"), CoreMatchers.equalTo(true));
+		} catch (Throwable err) {
+	   		collector.addError(err);
+	   	}
+		try {
+			collector.checkThat("Query should be valid", urlVal.isValid("https://www.google.com/search?safe=off&source=hp&ei=7QavWqioM4nXjwSz2bmIBQ&q=who+there&oq=who+there&gs_l=psy-ab.3..0l3j0i10k1j0l6.42298.43886.0.44040.13.8.0.0.0.0.114.708.7j1.8.0....0...1c.1.64.psy-ab..5.8.708.0..46j0i131k1j0i46k1.0.xNFhvn885ic"), CoreMatchers.equalTo(true));
+		} catch (Throwable err) {
+	   		collector.addError(err);
+	   	}
+		try {
+			collector.checkThat("Query should be valid", urlVal.isValid("http://www.google.com?name=John&city=NYC"), CoreMatchers.equalTo(true));
+		} catch (Throwable err) {
+	   		collector.addError(err);
+	   	}
+		try {
+			collector.checkThat("Query should be valid", urlVal.isValid("http://www.google.com?action=view"), CoreMatchers.equalTo(true));
+		} catch (Throwable err) {
+	   		collector.addError(err);
+	   	}
+		try {
+			collector.checkThat("Query should be valid", urlVal.isValid("http://www.google.com?action=edit&mode=up"), CoreMatchers.equalTo(true));
+		} catch (Throwable err) {
+	   		collector.addError(err);
+	   	}
+		try {
+			collector.checkThat("Query should be valid", urlVal.isValid("http://www.google.com"), CoreMatchers.equalTo(true));
+		} catch (Throwable err) {
+	   		collector.addError(err);
+	   	}
+	
+		// Test valid URL fragments
+		try {
+			collector.checkThat("URL fragment should be valid", urlVal.isValid("http://www.google.com/mail#two"), CoreMatchers.equalTo(true));
+		} catch (Throwable err) {
+	   		collector.addError(err);
+	   	}
+		try {
+			collector.checkThat("URL fragment should be valid", urlVal.isValid("http://www.example.org/foo.html#bar"), CoreMatchers.equalTo(true));
+		} catch (Throwable err) {
+	   		collector.addError(err);
+	   	}
+		try {
+			collector.checkThat("URL fragment should be valid", urlVal.isValid("http://www.w3.org/2004/02/skos/core#broader"), CoreMatchers.equalTo(true));
+		} catch (Throwable err) {
+	   		collector.addError(err);
+	   	}
+	 	
+	  	System.out.println("First Partition Complete. See JUnit output for details\n");
 		
    }
    
    @Test
    public void testYourSecondPartition() {
-	  	System.out.println("********Second Partition: Invalid URLs********");
+	  	System.out.println("SECOND PARTITION: INVALID URLS");
 		
 		System.out.println("Testing invalid URLs...");
 		String[] schemes = { "http", "https", "ftp" };
@@ -581,7 +581,7 @@ public class UrlValidatorTest {
 	   		collector.addError(err);
 	   	}
 	  	
-	  	System.out.println("Second Partition Complete\n"); 
+	  	System.out.println("Second Partition Complete. See JUnit output for details.\n"); 
    }
 	   
    @Test
