@@ -18,18 +18,18 @@ public class UrlValidatorTest {
 	public ErrorCollector collector = new ErrorCollector();
 
 	@Test
-	public void testResultPairs() {
+	public void testTestTuples() {
 		
-   		System.out.println("MANUAL TESTING: ResultPair Tests");
+   		System.out.println("MANUAL TESTING: TestTuple Tests");
 
-		// ResultPair is broken...see ResultPair.java in src dir.
-		ResultPair rp_true = new ResultPair("http://www.google.com", true);
-		ResultPair rp_false = new ResultPair("foo", false);
+		// TestTuple is broken...see TestTuple.java in src dir.
+		TestTuple rp_true = new TestTuple("http://www.google.com", true);
+		TestTuple rp_false = new TestTuple("foo", false);
 				
-		System.out.println("Testing ResultPair objects...");
-		collector.checkThat("ResultPair reporting incorrect valid property", rp_true.valid, CoreMatchers.equalTo(true));
-		collector.checkThat("ResultPair reporting incorrect valid property", rp_false.valid, CoreMatchers.equalTo(false));
-		System.out.println("ResultPair testing complete. See JUnit output for details.\n");
+		System.out.println("Testing TestTuple objects...");
+		collector.checkThat("TestTuple reporting incorrect valid property", rp_true.valid, CoreMatchers.equalTo(true));
+		collector.checkThat("TestTuple reporting incorrect valid property", rp_false.valid, CoreMatchers.equalTo(false));
+		System.out.println("TestTuple testing complete. See JUnit output for details.\n");
 	}
 	
 	@Test
@@ -211,7 +211,116 @@ public class UrlValidatorTest {
 	   @Test
 	   public void testIsValid() {
 		   //You can use this function for programming based testing
-	
+		   // https://tools.ietf.org/html/rfc3986#section-3
+		   int failedTests = 0;
+		   // combine from the testtuples and test combinations
+		   for(int i = 0; i < 500; i++) {
+			   // get random scheme
+			   
+			   // get random authority
+			   
+			   // get random port
+			   
+			   // get random path
+			   
+			   // get random query
+			   
+			   // test tuple values of all - if all true, then 
+			   // should pass else fail
+			   
+			   // run url validator on the generated url
+			   
+			   // test if url validator returns the same value
+			   // as the test tuples (control value)
+			   
+		   }
+		   
+		   
 	   }
-
+	   
+	   // Scheme names consist of a sequence of characters beginning with a
+	   // letter and followed by any combination of letters, digits, plus
+	   // ("+"), period ("."), or hyphen ("-").  Although schemes are case-
+	   // insensitive, the canonical form is lowercase and documents that
+	   // specify schemes must do so with lowercase letters.  An implementation
+	   // should accept uppercase letters as equivalent to lowercase in scheme
+	   // names (e.g., allow "HTTP" as well as "http") for the sake of
+	   // robustness but should only produce lowercase scheme names for
+	   // consistency.	   
+	   TestTuple[] testScheme = {
+			   new TestTuple("http://", true),
+               new TestTuple("ftp://", true),
+               new TestTuple("h3t://", true),
+               new TestTuple("3ht://", false),
+               new TestTuple("http:/", false),
+               new TestTuple("http:", false),
+               new TestTuple("http/", false),
+               new TestTuple("://", false),
+               new TestTuple("", true)
+	   };
+	   
+	   // The authority component is preceded by a double slash ("//") and is
+	   // terminated by the next slash ("/"), question mark ("?"), or number
+	   // sign ("#") character, or by the end of the URI.
+	   TestTuple[] testAuth = {
+			   new TestTuple("www.google.com", true),
+               new TestTuple("go.com", true),
+               new TestTuple("go.au", true),
+               new TestTuple("0.0.0.0", true),
+               new TestTuple("255.255.255.255", true),
+               new TestTuple("256.256.256.256", false),
+               new TestTuple("255.com", true),
+               new TestTuple("1.2.3.4.5", false),
+               new TestTuple("1.2.3.4.", false),
+               new TestTuple("1.2.3", false),
+               new TestTuple(".1.2.3.4", false),
+               new TestTuple("go.a", false),
+               new TestTuple("go.a1a", false),
+               new TestTuple("go.1aa", false),
+               new TestTuple("aaa.", false),
+               new TestTuple(".aaa", false),
+               new TestTuple("aaa", false),
+               new TestTuple("", false)
+	   };
+	   
+	   // The port subcomponent of authority is designated by an optional port
+	   // number in decimal following the host and delimited from it by a
+	   // single colon (":") character.
+	   TestTuple[] testPort = {
+			   new TestTuple(":80", true),
+               new TestTuple(":65535", true),
+               new TestTuple(":0", true),
+               new TestTuple("", true),
+               new TestTuple(":-1", false),
+              new TestTuple(":65636",false),
+               new TestTuple(":65a", false)
+	   };
+	   
+	   // The path is terminated by the first question mark
+	   //  ("?") or number sign ("#") character, or by the end
+	   //  of the URI.
+	   TestTuple[] testPath = {
+			   new TestTuple("/test1", true),
+               new TestTuple("/t123", true),
+               new TestTuple("/$23", true),
+               new TestTuple("/..", false),
+               new TestTuple("/../", false),
+               new TestTuple("/test1/", true),
+               new TestTuple("", true),
+               new TestTuple("/test1/file", true),
+               new TestTuple("/..//file", false),
+               new TestTuple("/test1//file", false)
+	   };
+	   
+	   // The query component is indicated by the first question
+	   // mark ("?") character and terminated by a number sign ("#") character
+	   // or by the end of the URI.
+	   TestTuple[] testQuery = {
+			   new TestTuple("?action=view", true),
+               new TestTuple("?action=edit&mode=up", true),
+               new TestTuple("", true),
+               new TestTuple("#", true),
+               new TestTuple("&action=view", false)
+	   };
+	   
 }
