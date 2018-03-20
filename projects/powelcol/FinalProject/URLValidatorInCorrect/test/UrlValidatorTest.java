@@ -9,6 +9,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 import org.hamcrest.CoreMatchers;
+import java.util.Random; 
 
 public class UrlValidatorTest {
 	
@@ -213,30 +214,58 @@ public class UrlValidatorTest {
 		   //You can use this function for programming based testing
 		   // https://tools.ietf.org/html/rfc3986#section-3
 		   int failedTests = 0;
+		   int trials = 500;
+		   boolean expectedResult = false; 
+		   boolean actualResult = false;
+		   String urlGenerated;
+		   TestTuple[] testUrl = new TestTuple[5];
+		   Random rand = new Random(); 
+		   
 		   // combine from the testtuples and test combinations
-		   for(int i = 0; i < 500; i++) {
+		   for(int i = 0; i < trials; i++) {
 			   // get random scheme
-			   
+			   testUrl[0] = testScheme[rand.nextInt(testScheme.length)];
 			   // get random authority
-			   
+			   testUrl[1] = testAuthority[rand.nextInt(testAuthority.length)];
 			   // get random port
-			   
+			   testUrl[2] = testPort[rand.nextInt(testPort.length)];
 			   // get random path
-			   
+			   testUrl[3] = testPath[rand.nextInt(testPath.length)];
 			   // get random query
+			   testUrl[4] = testQuery[rand.nextInt(testQuery.length)];
 			   
 			   // test tuple values of all - if all true, then 
 			   // should pass else fail
+			   expectedResult = testUrl[0].getValid() && testUrl[2].getValid() &&
+					   testUrl[3].getValid() && testUrl[4].getValid();
 			   
 			   // run url validator on the generated url
+			   urlGenerated = testUrl[0].getItem() + testUrl[2].getItem() +
+					   testUrl[3].getItem() + testUrl[4].getItem();
+			   UrlValidator validator = new UrlValidator(UrlValidator.ALLOW_ALL_SCHEMES);
+			   try {
+				   actualResult = validator.isValid(urlGenerated);
+			   } catch (Throwable err) {
+				   collector.addError(err);
+			   }
 			   
 			   // test if url validator returns the same value
 			   // as the test tuples (control value)
-			   
+			   if (expectedResult != actualResult) {
+				   failedTests++;
+				   System.out.println("--FAILURE: " + urlGenerated + "-> expected: "
+						   + expectedResult + " actual: " + actualResult);
+			   }
 		   }
 		   
-		   
+		   System.out.println("________________________________________");
+		   System.out.println("    RANDOMIZED UNIT TEST RESULTS ");
+		   System.out.println(failedTests + " failures out of " + trials);
+		   System.out.println("________________________________________"); 
 	   }
+	   
+	   // Most of these test cases were borrowed from the Apache commons
+	   // URL validator.
 	   
 	   // Scheme names consist of a sequence of characters beginning with a
 	   // letter and followed by any combination of letters, digits, plus
@@ -248,7 +277,7 @@ public class UrlValidatorTest {
 	   // robustness but should only produce lowercase scheme names for
 	   // consistency.	   
 	   TestTuple[] testScheme = {
-			   new TestTuple("http://", true),
+               new TestTuple("http://", true),
                new TestTuple("ftp://", true),
                new TestTuple("h3t://", true),
                new TestTuple("3ht://", false),
@@ -262,8 +291,8 @@ public class UrlValidatorTest {
 	   // The authority component is preceded by a double slash ("//") and is
 	   // terminated by the next slash ("/"), question mark ("?"), or number
 	   // sign ("#") character, or by the end of the URI.
-	   TestTuple[] testAuth = {
-			   new TestTuple("www.google.com", true),
+	   TestTuple[] testAuthority = {
+               new TestTuple("www.google.com", true),
                new TestTuple("go.com", true),
                new TestTuple("go.au", true),
                new TestTuple("0.0.0.0", true),
@@ -287,12 +316,12 @@ public class UrlValidatorTest {
 	   // number in decimal following the host and delimited from it by a
 	   // single colon (":") character.
 	   TestTuple[] testPort = {
-			   new TestTuple(":80", true),
+               new TestTuple(":80", true),
                new TestTuple(":65535", true),
                new TestTuple(":0", true),
                new TestTuple("", true),
                new TestTuple(":-1", false),
-              new TestTuple(":65636",false),
+               new TestTuple(":65636",false),
                new TestTuple(":65a", false)
 	   };
 	   
@@ -300,7 +329,7 @@ public class UrlValidatorTest {
 	   //  ("?") or number sign ("#") character, or by the end
 	   //  of the URI.
 	   TestTuple[] testPath = {
-			   new TestTuple("/test1", true),
+               new TestTuple("/test1", true),
                new TestTuple("/t123", true),
                new TestTuple("/$23", true),
                new TestTuple("/..", false),
@@ -316,7 +345,7 @@ public class UrlValidatorTest {
 	   // mark ("?") character and terminated by a number sign ("#") character
 	   // or by the end of the URI.
 	   TestTuple[] testQuery = {
-			   new TestTuple("?action=view", true),
+               new TestTuple("?action=view", true),
                new TestTuple("?action=edit&mode=up", true),
                new TestTuple("", true),
                new TestTuple("#", true),
